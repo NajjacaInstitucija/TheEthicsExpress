@@ -1,1 +1,1 @@
-# TheEthicsExpress
+# The Ethics Express
