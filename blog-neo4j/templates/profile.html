@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+
+
+{% block body %}
+
+Viewing {{ username }}'s profile
+<br><br>
+
+<div class="user_posts">
+    <ul>
+        {% for post in posts %}
+            <li class="simple_post">
+                <b><a href="">{{ post.p.header }}</a></b>, posted on {{ post.p.date }} 
+                <br>
+                Author: {{ post.u.username }}
+                <br> Hashtags:
+                #{{ ", #".join(post.htags) }}
+                <br>
+                {{ post.p.body }}
+                <br>
+                
+            </li>
+             <br>
+             <br>
+        
+        {% else %}
+        <li>No posts from {{ username }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

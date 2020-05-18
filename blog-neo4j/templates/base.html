@@ -16,9 +16,9 @@
 
                 <li><a href="/">Home</a></li>
                 {% if session['username'] %}
-                <li><a href="">Profile</a></li>
-                <li><a href="">My posts</a></li>
+                <li><a href="/profile/{{ session.username }}">Profile</a></li>
                 <li><a href="">Similar posts</a></li>
+                <li><a href="">Settings</a></li>
                 {% endif %}
                 
                 {% if not session['username'] %}
@@ -42,6 +42,7 @@
         </div>
 
     </div>
+    <hr>
     {% block body %}{% endblock %}
 </body>
 

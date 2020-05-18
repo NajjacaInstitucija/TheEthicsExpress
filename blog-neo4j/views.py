@@ -2,14 +2,14 @@ from flask import Flask, render_template,\
      url_for, request, redirect, flash, \
      session
 import os
-from models import User
+from models import User, get_most_recent_posts
 
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    posts = ''
+    posts = get_most_recent_posts()
     return render_template('index.html', posts=posts)
 
 
@@ -73,6 +73,18 @@ def new_post():
         User(session['username']).new_post(header, hashtags, body)
     
     return redirect(url_for('index'))
+
+@app.route('/profile/<username>')
+def profile(username):
+    viewed = username
+    posts = User(viewed).get_my_posts()
+    return render_template(
+        'profile.html',
+         username=viewed,
+         posts = posts
+         )
+
+
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(24)

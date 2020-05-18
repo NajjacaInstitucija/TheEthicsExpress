@@ -28,6 +28,19 @@ def get_timestamp():
 def get_date():
     return datetime.now().strftime('%Y-%m-%d')
 
+
+def get_most_recent_posts():
+    q = '''
+    match (u:User)-[po:POSTED]->(p:Post)<-[ha:HASHTAGGING]-(h:Hashtag)
+    return u, p, collect(h.tag) as htags
+    order by p.timestamp limit 10
+    '''
+
+    return graph.run(q)
+
+
+
+
 class User:
     def __init__(self, username):
         self.username = username
@@ -89,6 +102,16 @@ class User:
                     post
                     )
                 graph.create(relation)
+    
+    def get_my_posts(self):
+        q = '''
+        match (u:User)-[po:POSTED]->(p:Post)<-[ha:HASHTAGGING]-(h:Hashtag)
+        where u.username = $uname
+        return u, p, collect(h.tag) as htags
+        order by p.timestamp
+        '''
+
+        return graph.run(q, uname=self.username)
 
 
 class Hashtag:
