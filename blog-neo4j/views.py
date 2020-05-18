@@ -18,12 +18,16 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        confirmed = request.form['confirm']
         
         if len(username) < 1:
             flash('Username cannot be empty')
         
         elif len(password) < 1:
             flash('Password cannot be empty')
+        
+        elif password != confirmed:
+            flash('Passwords do not match')
         
         elif not User(username).register(password):
             flash('Username already exists')
@@ -42,13 +46,32 @@ def login():
 
         else:
             session['username'] = username
+            flash('Registration successful')
             return redirect(url_for('index'))
     
     return render_template('login.html') 
 
+
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('username', None)
+    return redirect(url_for('index'))
+
+@app.route('/new_post', methods=['GET', 'POST'])
+def new_post():
+    header = request.form['header']
+    hashtags = request.form['hashtags']
+    body = request.form['body']
+
+    if not header:
+        flash('Posting without header is just stupid')
+    
+    elif not body:
+        flash('Posting nothing. How fun')
+    
+    else:
+        User(session['username']).new_post(header, hashtags, body)
+    
     return redirect(url_for('index'))
 
 if __name__ == "__main__":

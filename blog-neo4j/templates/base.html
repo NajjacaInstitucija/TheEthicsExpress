@@ -13,10 +13,19 @@
     <div class="blog">
         <nav>
             <ul id="subpages">
-                <li><a href="">Home</a></li>
+
+                <li><a href="/">Home</a></li>
+                {% if session['username'] %}
                 <li><a href="">Profile</a></li>
+                <li><a href="">My posts</a></li>
+                <li><a href="">Similar posts</a></li>
+                {% endif %}
+                
+                {% if not session['username'] %}
                 <li><a href="/register">Register</a></li>
                 <li><a href="/login">Login</a></li>
+                {% endif %}
+
             </ul>
         </nav>
 

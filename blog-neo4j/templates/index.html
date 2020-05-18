@@ -8,9 +8,19 @@
 
 {% block body %}
 
-<div class="log">
-    
-
+{% if session['username'] %}
+<hr>
+<br>
+<div class="new_post">
+    <form action="/new_post" method="POST">
+        <span class="post_header">Header: </span>
+        <input type="text" placeholder="Place head here" name="header" size="40"><br> <br>
+        <span class="hashtags">Hashtags: </span>
+        <input type="text" placeholder="Separate hashtags with commablank(, )" name="hashtags" size="40"> <br> <br>
+        <br><textarea placeholder="What's up?" name="body" id="" cols="40" rows="10"></textarea> <br> <br>
+        <input type="submit" value="Post">
+    </form>
 </div>
+{% endif %}
 
 {% endblock %}
