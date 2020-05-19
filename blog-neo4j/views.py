@@ -2,14 +2,15 @@ from flask import Flask, render_template,\
      url_for, request, redirect, flash, \
      session
 import os
-from models import User, get_most_recent_posts
+from models import User, get_most_recent_posts, \
+    Post
 
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    posts = get_most_recent_posts()
+    posts = get_most_recent_posts() 
     return render_template('index.html', posts=posts)
 
 
@@ -83,6 +84,35 @@ def profile(username):
          username=viewed,
          posts = posts
          )
+
+
+@app.route('/post/<post_id>')
+def open_post(post_id):
+    p = Post(post_id)
+    selected_post = p.find()
+    user = p.get_author()
+    hashtags = p.get_hashtags()
+    comments = p.get_comments()
+    return render_template(
+        'post.html',
+        post=selected_post,
+        user=user,
+        hashtags=hashtags,
+        comments=comments     
+        )
+
+@app.route('/add_comment/<post_id>', methods=['GET', 'POST'])
+def new_comment(post_id):
+    pid = post_id
+    commentator = session['username']
+    text = request.form['comment']
+    if not text:
+        flash('This blog prohibits silent comments')
+    
+    else:
+        User(commentator).add_comment(pid, text)
+
+    return redirect(url_for('index'))  
 
 
 

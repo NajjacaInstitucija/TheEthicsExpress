@@ -38,7 +38,15 @@ def get_most_recent_posts():
 
     return graph.run(q)
 
+###### IDEJA ZA KOMENTARE: mozda ima i nesto bolje
+## ili promijeniti smjer jednog od bridova
 
+#match (u:User)-[po:POSTED]->(p:Post)<-[ha:HASHTAGGING]-(h:Hashtag)
+#with u, p, h
+#match (u2:User)-[w:WROTE]->(c:Comment)-[o:ON]->(p2:Post)
+#where p.id = p2.id
+#return u, p, collect(h.tag) as htags, c, u2
+#order by p.timestamp limit 10
 
 
 class User:
@@ -112,6 +120,32 @@ class User:
         '''
 
         return graph.run(q, uname=self.username)
+    
+    def add_comment(self, pid, text):
+        post = Post(pid).find()
+        user = self.find()
+        body = text
+        comment = Node(
+            'Comment',
+            id=str(uuid.uuid4()),
+            body=body,
+            timestamp=get_timestamp(),
+            date=get_date()
+        )
+        relation_user_comment = Relationship(
+            user,
+            'WROTE',
+            comment
+        )
+        graph.create(relation_user_comment)
+        relation_comment_post = Relationship(
+            comment,
+            'ON',
+            post
+        )
+        graph.create(relation_comment_post)
+
+
 
 
 class Hashtag:
@@ -121,14 +155,64 @@ class Hashtag:
     def find(self):
         ht = graph.evaluate(
             '''
-            match (h:Hashtag) where h.tag=$htag
+            match (h:Hashtag) 
+            where h.tag=$htag
             return h limit 1 
             ''', htag=self.tag
         )
         return ht
 
-        
 
+class Post:   
+    def __init__(self, post_id):
+        self.id = post_id
+
+    def find(self):
+        p = graph.evaluate(
+            '''
+            match (p:Post) where p.id=$pid
+            return p limit 1 
+            ''', pid=self.id
+        )  
+        return p
+    
+    def get_details(self):
+        q = '''
+        match (u:User)-[po:POSTED]->(p:Post)<-[ha:HASHTAGGING]-(h:Hashtag)
+        where p.id = $pid
+        return u, p, collect(h.tag) as htags
+        '''
+        return graph.run(q, pid=self.id)
+    
+    def get_author(self):
+        u = graph.evaluate(
+            '''
+            match (u:User)-[po:POSTED]->(p:Post) 
+            where p.id=$pid
+            return u limit 1 
+            ''', pid=self.id
+        )  
+        return u
+    
+    def get_hashtags(self):
+        h = graph.evaluate(
+            '''
+            match (h:Hashtag)-[ha:HASHTAGGING]->(p:Post) 
+            where p.id=$pid
+            return collect(h.tag) as htags 
+            ''', pid=self.id
+        )
+        return h
+        
+    
+    def get_comments(self):
+        q= '''
+        match (u:User)-[w:WROTE]->(c:Comment)-[o:ON]->(p:Post) 
+        where p.id=$pid
+        return u, c
+        order by c.timestamp  
+        '''
+        return graph.run(q, pid=self.id)
 
 
 
