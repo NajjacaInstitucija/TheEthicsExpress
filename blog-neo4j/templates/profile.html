@@ -15,13 +15,13 @@ Viewing {{ username }}'s profile
     <ul>
         {% for post in posts %}
             <li class="simple_post">
-                <b><a href="">{{ post.p.header }}</a></b>, posted on {{ post.p.date }} 
+                <b><a href="/post/{{post.p.id}}">{{ post.p.header }}</a></b>, posted on {{ post.p.date }} 
                 <br>
                 Author: {{ post.u.username }}
                 <br> Hashtags:
                 #{{ ", #".join(post.htags) }}
-                <br>
-                {{ post.p.body }}
+                <br> <br>
+                <em>{{ post.p.body }}</em>
                 <br>
                 
             </li>
