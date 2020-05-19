@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Profil </title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body>
+			<header id="header" class="alt">
+				<a href="#menu">Menu</a>
+			</header>
+      <nav id="menu">
+        <ul class="links">
+          <li><a href="pocetna.html">Početna</a></li>
+          <li><a href="prijava.html">Odjava</a></li>
+          <li><a href="profil.html">Profil</a></li>
+        </ul>
+      </nav>
+
+		<!-- Main -->
+			<div id="main">
+
+				<!-- Section -->
+					<section class="wrapper style2">
+						<div class="inner">
+							<div class="flex flex-2">
+								<div class="col col2">
+									<h3>Napiši novu objavu:</h3>
+                  <form method="post" action="#">
+                    <table>
+                    <tbody>
+                        <tr>
+                          <th id="mleft">Naslov:</th>
+                          <td class="mright">
+                            <input type="text" name="naslov" size="40">
+                          </td>
+                        </tr>
+                        <tr>
+                          <th id="mleft">Oznake:</th>
+                          <td class="mright">
+                            <input type="text" name="oznake" size="40">
+                          </td>
+                        </tr>
+                        <tr>
+                          <th id="mleft">Objava:</th>
+                          <td class="mright">
+                            <textarea name="objava" id="" cols="40" rows="6"></textarea>
+                          </td>
+                        </tr>
+                    </tbody>
+                    </table>  
+                  </form>
+                  <div class="profile_buttons">
+                    <input type="submit" name="objavi" value="Objavi">                 
+							    </div>
+					</div>
+					</section>
+				<!-- Section -->
+        <section class="wrapper style2">
+          <div class="inner">
+            <div class="flex flex-2">
+              <div class="col col2">
+                <h3>Nedavne objave:</h3>
+                {% for post in posts %}                
+                  <table>
+                  <tbody>
+                      <tr>
+                        <th id="mleft">Autor:</th>
+                        <td class="mright">
+                          <a href="/profile/{{ post.u.username }}">
+                            {{ post.u.username }}
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th id="mleft">Oznake:</th>
+                        <td class="mright">
+                          #{{ ", #".join(post.htags) }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th id="mleft">Objava:</th>
+                        <td class="mright">
+                          {{ post.p.body }}
+                        </td>
+                      </tr>
+                  </tbody>
+                  </table>  
+                {% endfor %}
+        </div>
+        </section>
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="copyright">
+
+				<p>&copy; Sva prava pridržana. Dizajn: GAMMA. Slike: <a href="https://unsplash.com">Unsplash</a> i <a href="https://pexels.com">Pexels</a> .</p>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
