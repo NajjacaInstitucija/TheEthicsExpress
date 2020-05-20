@@ -3,14 +3,14 @@ from flask import Flask, render_template,\
      session
 import os
 from models import User, get_most_recent_posts, \
-    Post
+    Post, get_recent_posts
 
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    posts = get_most_recent_posts() 
+    posts = get_most_recent_posts()
     return render_template('index.html', posts=posts)
 
 
@@ -114,6 +114,34 @@ def new_comment(post_id):
 
     return redirect(url_for('index'))  
 
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    if request.method == 'POST':
+        old = request.form['old']
+        new = request.form['new']
+        confirm = request.form['confirm']
+
+        if not User(session['username']).verify(old):
+            flash('That is not your password')
+        
+        elif new != confirm:
+            flash('New passwords do not match')
+
+        else:
+            User(session['username']).change_password(new)
+            flash('Password successfully changed') 
+
+
+    return render_template ('change_password.html')
+
+@app.route('/change_profile_picture',  methods=['GET', 'POST'])
+def change_profile_picture():
+    return render_template('change_profile_picture.html')
 
 
 if __name__ == "__main__":

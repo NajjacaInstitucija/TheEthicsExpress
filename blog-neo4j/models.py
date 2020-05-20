@@ -38,6 +38,16 @@ def get_most_recent_posts():
 
     return graph.run(q)
 
+def get_recent_posts():
+    posts = graph.evaluate('''
+    match (p:Post)
+    return collect(p)
+    limit 10
+    ''')
+
+    return posts
+
+
 ###### IDEJA ZA KOMENTARE: mozda ima i nesto bolje
 ## ili promijeniti smjer jednog od bridova
 
@@ -54,7 +64,6 @@ class User:
         self.username = username
     
     def find(self):
-        #user = graph.nodes.match('User', username=self.username).first()
         user = graph.evaluate(
             '''
             match (u:User) where u.username=$usname
@@ -78,6 +87,14 @@ class User:
             user = self.find()
             return bcrypt.verify(password, user['password'])
     
+    def change_password(self, new_password):
+        q = '''
+        match (u:User)
+        where u.username = $uname
+        set u.password = $password
+        '''
+        return graph.run(q, uname=self.username, password=bcrypt.encrypt(new_password))
+
     def new_post(self, header, hashtags, body):
         post = Node(
             'Post',
