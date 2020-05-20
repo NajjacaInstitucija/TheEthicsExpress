@@ -19,7 +19,7 @@
                 {% if session['username'] %}
                 <li><a href="/profile/{{ session.username }}">Profile</a></li>
                 <li><a href="">Similar posts</a></li>
-                <li><a href="">Settings</a></li>
+                <li><a href="/settings">Settings</a></li>
                 {% endif %}
                 
                 {% if not session['username'] %}

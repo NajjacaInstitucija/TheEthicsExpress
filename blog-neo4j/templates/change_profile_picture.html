@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+
+
+{% block body %}
+
+{% if session['username'] %}
+
+<div class="settings">
+    <form action="/change_profile_picture" method="POST" enctype=multipart/form-data>
+        <input type=file name=file>
+        <input type="submit" value="Apply">
+    </form>
+</div>
+{% endif %}
+
+{% endblock %}

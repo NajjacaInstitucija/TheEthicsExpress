@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+
+
+{% block body %}
+
+{% if session['username'] %}
+
+<ul class="settings_links">
+    <li><a href="/change_password">Change password</a></li>
+    <li><a href="/change_profile_picture">Change profile picture</a></li>
+</ul>
+
+{% endif %}
+
+{% endblock %}
