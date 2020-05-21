@@ -33,7 +33,7 @@ def get_most_recent_posts():
     q = '''
     match (u:User)-[po:POSTED]->(p:Post)<-[ha:HASHTAGGING]-(h:Hashtag)
     return u, p, collect(h.tag) as htags
-    order by p.timestamp limit 10
+    order by p.timestamp desc limit 10
     '''
 
     return graph.run(q)
@@ -133,7 +133,7 @@ class User:
         match (u:User)-[po:POSTED]->(p:Post)<-[ha:HASHTAGGING]-(h:Hashtag)
         where u.username = $uname
         return u, p, collect(h.tag) as htags
-        order by p.timestamp
+        order by p.timestamp desc
         '''
 
         return graph.run(q, uname=self.username)
@@ -163,6 +163,15 @@ class User:
         graph.create(relation_comment_post)
 
 
+    def get_similar_users(self):
+        q = '''
+        match (i:User)-[:POSTED]->(:Post)<-[:HASHTAGGING]-(h:Hashtag),
+        (similar:User)-[:POSTED]->(:Post)<-[:HASHTAGGING]-(h)
+        where i.username = $uname and i.username <> similar.username
+        return similar, collect(distinct h.tag) as htags
+        order by size(htags) desc
+        '''
+        return graph.run(q, uname=self.username)
 
 
 class Hashtag:

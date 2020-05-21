@@ -143,6 +143,12 @@ def change_password():
 def change_profile_picture():
     return render_template('change_profile_picture.html')
 
+@app.route('/similar_users')
+def similar_users():
+    similars = User(session['username']).get_similar_users()
+    return render_template('similar_users.html', similars=similars)
+
+
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(24)
