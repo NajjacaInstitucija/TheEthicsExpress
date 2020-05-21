@@ -5,8 +5,27 @@ import os
 from models import User, get_most_recent_posts, \
     Post, get_recent_posts
 
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
+
+
+app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
+app.config["IMAGE_UPLOADS"] = "C:\\Users\\stvar\\python\\blog-neo4j\\static\\images"
+
+def allowed_image(filename):
+
+    if not "." in filename:
+        return False
+
+    ext = filename.rsplit(".", 1)[1]
+
+    if ext.upper() in app.config["ALLOWED_IMAGE_EXTENSIONS"]:
+        return True
+    else:
+        return False
+
 
 @app.route('/')
 def index():
@@ -79,10 +98,13 @@ def new_post():
 def profile(username):
     viewed = username
     posts = User(viewed).get_my_posts()
+    image = User(viewed).get_my_image()
+    #image = image.replace(',', '\\')
     return render_template(
         'profile.html',
          username=viewed,
-         posts = posts
+         posts = posts,
+         image = image
          )
 
 
@@ -139,9 +161,33 @@ def change_password():
 
     return render_template ('change_password.html')
 
+
+
 @app.route('/change_profile_picture',  methods=['GET', 'POST'])
 def change_profile_picture():
+    if request.method == "POST":
+
+        if request.files:
+            image = request.files["image"]
+
+            if image.filename == "":
+                return redirect(request.url)
+            
+            elif allowed_image(image.filename):
+                filename = secure_filename(image.filename)
+                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+                image_location = "\\static\\images\\" + filename
+
+                #print(image_location.replace(',', '\\'))
+                User(session['username']).change_profile_picture(image_location)
+                return redirect(request.url)
+
+            else: 
+                flash("You cannot upload that.")
+                return redirect(request.url)
+
     return render_template('change_profile_picture.html')
+
 
 @app.route('/similar_users')
 def similar_users():

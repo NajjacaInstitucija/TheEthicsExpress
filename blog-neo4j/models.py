@@ -26,7 +26,7 @@ def get_timestamp():
 
 
 def get_date():
-    return datetime.now().strftime('%Y-%m-%d')
+    return datetime.now().strftime('%d. %m. %Y.')
 
 
 def get_most_recent_posts():
@@ -137,6 +137,16 @@ class User:
         '''
 
         return graph.run(q, uname=self.username)
+
+    def get_my_image(self):
+        im = graph.evaluate('''
+        match (u:User)
+        where u.username = $uname
+        return u.image
+        ''', uname=self.username
+        ) 
+        return im
+
     
     def add_comment(self, pid, text):
         post = Post(pid).find()
@@ -172,6 +182,14 @@ class User:
         order by size(htags) desc
         '''
         return graph.run(q, uname=self.username)
+    
+
+    def change_profile_picture(self, image_path):
+        q = '''
+        match (u:User) where u.username = $uname
+        set u.image = $image
+        '''
+        return graph.run(q, uname=self.username, image=image_path)
 
 
 class Hashtag:
