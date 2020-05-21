@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+
+
+{% block body %}
+
+{% if session['username'] %}
+
+<ul class="similar">
+    {% for user in similars %}
+    <li>
+        <a href="\profile\{{ user.similar.username }}">{{ user.similar.username }}</a>
+        <br>
+        You both used hashtags: #{{ ", #".join(user.htags) }} 
+    </li>
+    <br>
+
+    {% endfor %}
+</ul>
+
+{% endif %}
+
+{% endblock %}
