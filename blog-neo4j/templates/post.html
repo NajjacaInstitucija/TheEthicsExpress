@@ -26,16 +26,18 @@
             {% for comment in comments %}
             <li><b><a href="/profile/{{ comment.u.username }}">
                 {{ comment.u.username }}
-            </a></b> </li>
-            <em>{{ comment.c.body }}</em>
+            </a></b>
+            <br><em>{{ comment.c.body }}</em>
+            </li>
             {% endfor %}
         </ul>
         <br>
-
+        <div class="new_comment">
         <form action="/add_comment/{{ post.id }}" method="POST">
             <textarea placeholder="Comment this post..." name="comment" id="comment" cols="30" rows="3"></textarea>
             <br><input type="submit" value="Add comment">
         </form>
+        </div>
             
     </li>
     
