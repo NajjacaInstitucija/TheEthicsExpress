@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+
+
+{% block body %}
+
+{% if session['username'] %}
+
+<h3>Posts which headers contain: <em>{{to_search}}</em></h3>
+
+<div class="posts_containing_word">
+    <ul>
+    {% for post in posts %}
+        <li class="simple_post">
+            <b><a href="/post/{{ post.post_details.id }}">{{ post.post_details.header }}</a></b>, posted on {{ post.post_details.date }} 
+            <br>
+            Author: 
+                <a href="/profile/{{ post.author.username }}">
+                    {{ post.author.username }}
+                </a> 
+            <br> Hashtags:
+            #{{ ", #".join(post.hashtags) }}
+            <br> <br>
+            <em>{{ post.post_details.body }}</em>
+            <br>
+            
+            <ul class="comments">
+                {% for comment in post.comments %}
+                <li class="comment">
+                    <b> <a href="/profile/{{ comment.u.username }}">{{ comment.u.username }}</a></b>
+                    <br> <em>{{ comment.c.body }}</em> <br>
+                </li>
+                {% endfor %}
+                
+            </ul>
+            <br>
+            <div class="new_comment">
+                <form action="/add_comment/{{ post.post_details.id }}" method="POST">
+                    <textarea placeholder="Comment this post..." name="comment" id="comment" cols="30" rows="3"></textarea>
+                    <br><input type="submit" value="Add comment">
+                </form>
+            </div>
+        </li>
+         <br>
+         <br>
+         <hr>
+    {% endfor %}
+    </ul>
+</div>
+
+<hr><hr>
+
+<h3>Posts where one or more hashtags is (are) like: <em>{{to_search}}</em></h3>
+<div class="posts_containing_word">
+    <ul>
+    {% for post in posts_having_hashtags %}
+        <li class="simple_post">
+            <b><a href="/post/{{ post.post_details.id }}">{{ post.post_details.header }}</a></b>, posted on {{ post.post_details.date }} 
+            <br>
+            Author: 
+                <a href="/profile/{{ post.author.username }}">
+                    {{ post.author.username }}
+                </a> 
+            <br> Hashtags:
+            #{{ ", #".join(post.hashtags) }}
+            <br> <br>
+            <em>{{ post.post_details.body }}</em>
+            <br>
+            
+            <ul class="comments">
+                {% for comment in post.comments %}
+                <li class="comment">
+                    <b> <a href="/profile/{{ comment.u.username }}">{{ comment.u.username }}</a></b>
+                    <br> <em>{{ comment.c.body }}</em> <br>
+                </li>
+                {% endfor %}
+                
+            </ul>
+            <br>
+            <div class="new_comment">
+                <form action="/add_comment/{{ post.post_details.id }}" method="POST">
+                    <textarea placeholder="Comment this post..." name="comment" id="comment" cols="30" rows="3"></textarea>
+                    <br><input type="submit" value="Add comment">
+                </form>
+            </div>
+        </li>
+         <br>
+         <br>
+         <hr>
+    {% endfor %}
+    </ul>
+</div>
+<hr><hr>
+
+<h3>Users which usernames are like: <em>{{to_search}}</em></h3>
+
+<div class="users">
+    <ul>
+        {% for user in users %}
+            <li class="user">
+                <b> <a href="/profile/{{ user.username }}">{{ user.username }}</a></b>
+            </li>
+             
+        {% endfor %}
+        </ul>
+</div>
+
+{% endif %}
+
+{% endblock %}

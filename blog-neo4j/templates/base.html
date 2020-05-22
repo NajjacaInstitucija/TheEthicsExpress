@@ -17,6 +17,7 @@
 
                 <li><a href="/">Home</a></li>
                 {% if session['username'] %}
+                <li><a href="/search">Search</a></li>
                 <li><a href="/profile/{{ session.username }}">Profile</a></li>
                 <li><a href="/similar_users">Similar users</a></li>
                 <li><a href="/settings">Settings</a></li>

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+
+
+{% block body %}
+
+{% if session['username'] %}
+
+<div class="search">
+    <form action="/search" method="POST">
+        <input type="text" name="to_search" id="to_search">
+        <br> <br>
+        <input type="submit" value="Search">
+    </form>
+</div>
+{% endif %}
+
+{% endblock %}
