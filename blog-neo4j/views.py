@@ -3,7 +3,7 @@ from flask import Flask, render_template,\
      session
 import os
 from models import User, get_most_recent_posts, \
-    Post, get_recent_posts, OutputPost
+    Post, get_recent_posts, OutputPost, search_database
 
 from werkzeug.utils import secure_filename
 
@@ -224,6 +224,37 @@ def similar_users():
     similars = User(session['username']).get_similar_users()
     return render_template('similar_users.html', similars=similars)
 
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        to_search = request.form['to_search']
+        searched_posts, phh, users = search_database(to_search)
+        
+        posts = []
+        for p in searched_posts:
+            post = Post(p['id'])
+            post_details = post.find()
+            author = post.get_author()
+            hashtags = post.get_hashtags()
+            comments = post.get_comments()
+            rp = OutputPost(post_details, author, hashtags, comments)
+            posts.append(rp)
+        
+        posts_having_hashtags = []
+        for ph in phh:
+            post = Post(ph['id'])
+            post_details = post.find()
+            author = post.get_author()
+            hashtags = post.get_hashtags()
+            comments = post.get_comments()
+            hashtag_post = OutputPost(post_details, author, hashtags, comments)
+            posts_having_hashtags.append(hashtag_post)
+        
+        return render_template('search_results.html', posts=posts, posts_having_hashtags=posts_having_hashtags, users=users, to_search=to_search)
+
+    else:    
+        return render_template('search_page.html')
 
 
 if __name__ == "__main__":

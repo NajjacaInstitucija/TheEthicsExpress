@@ -275,4 +275,32 @@ class OutputPost:
         self.author = author
         self.comments = comments
         self.hashtags = hashtags
-        
+
+
+def search_database(to_search):
+    p = graph.evaluate(
+        '''
+        match (p:Post)
+        where tolower(p.header) contains $ts
+        with p.timestamp as timestamp, p as post
+        order by timestamp desc
+        return collect(post)
+        ''', ts=to_search
+    )
+    ph = graph.evaluate(
+        '''
+        match (p:Post)<-[:HASHTAGGING]-(h:Hashtag)
+        where tolower(h.tag) contains $ts
+        with p.timestamp as timestamp, p as post, h.tag as htag
+        order by timestamp desc
+        return collect(distinct post)
+        ''', ts=to_search
+    )
+    u = graph.evaluate(
+        '''
+        match (u:User)
+        where u.username contains $ts
+        return collect(u)
+        ''', ts=to_search
+    )
+    return p,ph,u
