@@ -3,7 +3,7 @@ from flask import Flask, render_template,\
      session
 import os
 from models import User, get_most_recent_posts, \
-    Post, get_recent_posts
+    Post, get_recent_posts, OutputPost
 
 from werkzeug.utils import secure_filename
 
@@ -29,8 +29,18 @@ def allowed_image(filename):
 
 @app.route('/')
 def index():
-    posts = get_most_recent_posts()
-    return render_template('index.html', posts=posts)
+    rp = get_recent_posts()
+    recent_posts = []
+    for p in rp:
+        post = Post(p['id'])
+        post_details = post.find()
+        author = post.get_author()
+        hashtags = post.get_hashtags()
+        comments = post.get_comments()
+        recent = OutputPost(post_details, author, hashtags, comments)
+        recent_posts.append(recent)
+    
+    return render_template('index.html', recent_posts=recent_posts)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -99,11 +109,22 @@ def profile(username):
     viewed = username
     posts = User(viewed).get_my_posts()
     image = User(viewed).get_my_image()
+
+    my_posts = []
+    for p in posts:
+        post = Post(p['id'])
+        post_details = post.find()
+        author = post.get_author()
+        hashtags = post.get_hashtags()
+        comments = post.get_comments()
+        my_post = OutputPost(post_details, author, hashtags, comments)
+        my_posts.append(my_post)
+
     #image = image.replace(',', '\\')
     return render_template(
         'profile.html',
          username=viewed,
-         posts = posts,
+         my_posts = my_posts,
          image = image
          )
 

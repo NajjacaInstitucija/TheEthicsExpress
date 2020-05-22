@@ -41,15 +41,14 @@ def get_most_recent_posts():
 def get_recent_posts():
     posts = graph.evaluate('''
     match (p:Post)
-    return collect(p)
-    limit 10
+    with p.timestamp as timestamp, p as post
+    order by timestamp desc limit 10
+    return collect(post)
     ''')
 
     return posts
 
 
-###### IDEJA ZA KOMENTARE: mozda ima i nesto bolje
-## ili promijeniti smjer jednog od bridova
 
 #match (u:User)-[po:POSTED]->(p:Post)<-[ha:HASHTAGGING]-(h:Hashtag)
 #with u, p, h
@@ -129,14 +128,24 @@ class User:
                 graph.create(relation)
     
     def get_my_posts(self):
-        q = '''
-        match (u:User)-[po:POSTED]->(p:Post)<-[ha:HASHTAGGING]-(h:Hashtag)
-        where u.username = $uname
-        return u, p, collect(h.tag) as htags
-        order by p.timestamp desc
-        '''
+        #q = '''
+        #match (u:User)-[po:POSTED]->(p:Post)<-[ha:HASHTAGGING]-(h:Hashtag)
+        #where u.username = $uname
+        #return u, p, collect(h.tag) as htags
+        #order by p.timestamp desc
+        #'''
 
-        return graph.run(q, uname=self.username)
+        #return graph.run(q, uname=self.username)
+        p = graph.evaluate(
+            '''
+            match (u:User)-[po:POSTED]->(p:Post)
+            where u.username = $uname
+            with p.timestamp as timestamp, p as post
+            order by p.timestamp desc
+            return collect(post)
+            ''', uname=self.username
+        )
+        return p
 
     def get_my_image(self):
         im = graph.evaluate('''
@@ -260,3 +269,10 @@ class Post:
 
 
 
+class OutputPost:
+    def __init__(self, post_details, author, hashtags, comments):
+        self.post_details = post_details
+        self.author = author
+        self.comments = comments
+        self.hashtags = hashtags
+        
