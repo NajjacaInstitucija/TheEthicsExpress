@@ -165,6 +165,7 @@ def change_password():
 
 @app.route('/change_profile_picture',  methods=['GET', 'POST'])
 def change_profile_picture():
+    image = User(session['username']).get_my_image()
     if request.method == "POST":
 
         if request.files:
@@ -175,8 +176,16 @@ def change_profile_picture():
             
             elif allowed_image(image.filename):
                 filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
-                image_location = "\\static\\images\\" + filename
+                path = os.path.join(app.config["IMAGE_UPLOADS"], session['username'])
+                file = os.path.join(path, filename)
+                
+                if not os.path.isdir(path):
+                    os.mkdir(path)
+
+                if not os.path.isfile(file):
+                    image.save(file)
+                
+                image_location = "\\static\\images\\" + session['username'] + "\\" + filename
 
                 #print(image_location.replace(',', '\\'))
                 User(session['username']).change_profile_picture(image_location)
@@ -186,7 +195,7 @@ def change_profile_picture():
                 flash("You cannot upload that.")
                 return redirect(request.url)
 
-    return render_template('change_profile_picture.html')
+    return render_template('change_profile_picture.html', image=image)
 
 
 @app.route('/similar_users')
