@@ -12,12 +12,15 @@
 <hr>
 <br>
 <div class="new_post">
-    <form action="/new_post" method="POST">
+    <form action="/new_post" enctype="multipart/form-data" method="POST">
         <span class="post_header">Header: </span>
         <input type="text" placeholder="Place head here" name="header" size="40"><br> <br>
         <span class="hashtags">Hashtags: </span>
         <input type="text" placeholder="Separate hashtags with commablank(, )" name="hashtags" size="40"> <br> <br>
         <br><textarea placeholder="What's up?" name="body" id="" cols="40" rows="10"></textarea> <br> <br>
+        <span class="images">Images: 
+            <input type="file" name="pics" id="pics" multiple>
+        </span> <br> <br>
         <input type="submit" value="Post">
     </form>
 </div>
@@ -61,6 +64,12 @@
             <br> Hashtags:
             #{{ ", #".join(post.hashtags) }}
             <br> <br>
+            {% if post.post_details.post_pics %}
+            {% for pic in post.post_details.post_pics %}
+                <img src="{{ pic }}" alt="Slika posta" width="300" height="200">
+            {% endfor %}
+            {% endif %}    
+            <br><br>
             <em>{{ post.post_details.body }}</em>
             <br>
             

@@ -53,6 +53,12 @@ Viewing {{ username }}'s profile
             <br> Hashtags:
             #{{ ", #".join(post.hashtags) }}
             <br> <br>
+            {% if post.post_details.post_pics %}
+            {% for pic in post.post_details.post_pics %}
+                <img src="{{ pic }}" alt="Slika posta" width="300" height="200">
+            {% endfor %}
+            {% endif %} 
+            <br><br>
             <em>{{ post.post_details.body }}</em>
             <br>
             
@@ -80,4 +86,9 @@ Viewing {{ username }}'s profile
     </ul>
 </div>
 
+<br><br>
+    <div class="image">
+        <img src="{{ image }}" alt="{{ username }}'s profile picture">
+        
+    </div>
 {% endblock %}

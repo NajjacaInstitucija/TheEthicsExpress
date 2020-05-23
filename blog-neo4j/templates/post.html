@@ -19,6 +19,12 @@
         <br> Hashtags:
         #{{ ", #".join(hashtags) }}
         <br> <br>
+        {% if post.post_pics %}
+        {% for pic in post.post_pics %}
+            <img src="{{ pic }}" alt="Slika posta" width="300" height="200">
+        {% endfor %}
+        {% endif %} 
+        <br><br>
         <em> {{ post.body }} </em>
         <br>
 
