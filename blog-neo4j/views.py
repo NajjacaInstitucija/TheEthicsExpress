@@ -39,7 +39,6 @@ def index():
         comments = post.get_comments()
         recent = OutputPost(post_details, author, hashtags, comments)
         recent_posts.append(recent)
-    
     return render_template('index.html', recent_posts=recent_posts)
 
 
@@ -93,6 +92,32 @@ def new_post():
     hashtags = request.form['hashtags']
     body = request.form['body']
 
+    if request.files:
+        post_pics = []
+        for pic in request.files.getlist("pics"):
+            if pic.filename == "":
+                continue
+            
+            elif allowed_image(pic.filename):
+                filename = secure_filename(pic.filename)
+                path = os.path.join(app.config["IMAGE_UPLOADS"], session['username'], "post")
+                file = os.path.join(path, filename)
+                
+                if not os.path.isdir(path):
+                    os.mkdir(path)
+
+                if not os.path.isfile(file):
+                    pic.save(file)
+                
+                pic_location = "\\static\\images\\" + session['username'] + "\\post\\" + filename
+                post_pics.append(pic_location)
+
+                #print(image_location.replace(',', '\\'))
+
+            else: 
+                flash("You cannot upload that picture")
+
+
     if not header:
         flash('Posting without header is just stupid')
     
@@ -100,7 +125,7 @@ def new_post():
         flash('Posting nothing. How fun')
     
     else:
-        User(session['username']).new_post(header, hashtags, body)
+        User(session['username']).new_post(header, hashtags, body, post_pics)
     
     return redirect(url_for('index'))
 
@@ -146,14 +171,15 @@ def open_post(post_id):
 
 @app.route('/add_comment/<post_id>', methods=['GET', 'POST'])
 def new_comment(post_id):
-    pid = post_id
-    commentator = session['username']
-    text = request.form['comment']
-    if not text:
-        flash('This blog prohibits silent comments')
+    if request.method == 'POST':
+        pid = post_id
+        commentator = session['username']
+        text = request.form['comment']
+        if not text:
+            flash('This blog prohibits silent comments')
     
-    else:
-        User(commentator).add_comment(pid, text)
+        else:
+            User(commentator).add_comment(pid, text)
 
     return redirect(url_for('index'))  
 

@@ -94,12 +94,13 @@ class User:
         '''
         return graph.run(q, uname=self.username, password=bcrypt.encrypt(new_password))
 
-    def new_post(self, header, hashtags, body):
+    def new_post(self, header, hashtags, body, post_pics):
         post = Node(
             'Post',
             id=str(uuid.uuid4()),
             header = header,
             body = body,
+            post_pics = post_pics,
             timestamp = get_timestamp(),
             date = get_date()
         )
@@ -199,6 +200,8 @@ class User:
         set u.image = $image
         '''
         return graph.run(q, uname=self.username, image=image_path)
+
+
 
 
 class Hashtag:
