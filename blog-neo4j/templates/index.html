@@ -12,15 +12,12 @@
 <hr>
 <br>
 <div class="new_post">
-    <form action="/new_post" enctype="multipart/form-data" method="POST">
+    <form action="/new_post" method="POST">
         <span class="post_header">Header: </span>
         <input type="text" placeholder="Place head here" name="header" size="40"><br> <br>
         <span class="hashtags">Hashtags: </span>
         <input type="text" placeholder="Separate hashtags with commablank(, )" name="hashtags" size="40"> <br> <br>
         <br><textarea placeholder="What's up?" name="body" id="" cols="40" rows="10"></textarea> <br> <br>
-        <span class="images">Images: 
-            <input type="file" name="pics" id="pics" multiple>
-        </span> <br> <br>
         <input type="submit" value="Post">
     </form>
 </div>
@@ -30,18 +27,18 @@
     <ul>
     {% for post in posts %}
         <li class="simple_post">
-            <b><a href="/post/{{ post.p.id }}">{{ post.p.header }}</a></b>, posted on {{ post.p.date }} 
+            <b><a href="/post/{{ post.p.id }}">{{ post.p.header }}</a></b>, posted on {{ post.p.date }}
             <br>
-            Author: 
+            Author:
                 <a href="/profile/{{ post.u.username }}">
                     {{ post.u.username }}
-                </a> 
+                </a>
             <br> Hashtags:
             #{{ ", #".join(post.htags) }}
             <br> <br>
             <em>{{ post.p.body }}</em>
             <br>
-            
+
         </li>
          <br>
          <br>
@@ -55,24 +52,18 @@
     <ul>
     {% for post in recent_posts %}
         <li class="simple_post">
-            <b><a href="/post/{{ post.post_details.id }}">{{ post.post_details.header }}</a></b>, posted on {{ post.post_details.date }} 
+            <b><a href="/post/{{ post.post_details.id }}">{{ post.post_details.header }}</a></b>, posted on {{ post.post_details.date }}
             <br>
-            Author: 
+            Author:
                 <a href="/profile/{{ post.author.username }}">
                     {{ post.author.username }}
-                </a> 
+                </a>
             <br> Hashtags:
             #{{ ", #".join(post.hashtags) }}
             <br> <br>
-            {% if post.post_details.post_pics %}
-            {% for pic in post.post_details.post_pics %}
-                <img src="{{ pic }}" alt="Slika posta" width="300" height="200">
-            {% endfor %}
-            {% endif %}    
-            <br><br>
             <em>{{ post.post_details.body }}</em>
             <br>
-            
+
             <ul class="comments">
                 {% for comment in post.comments %}
                 <li class="comment">
@@ -80,7 +71,7 @@
                     <br> <em>{{ comment.c.body }}</em> <br>
                 </li>
                 {% endfor %}
-                
+
             </ul>
             <br>
             <div class="new_comment">
@@ -97,8 +88,19 @@
     </ul>
 </div>
 
+{% else %}
+<section id="banner">
+  <div class="inner">
+    <header>
+      <h1>Ovo je putovanje</h1>
+      <p>Svima nam nedostaje. <br />Pa prošetajmo se lijepim mjestima. </p>
+    </header>
 
+  </div>
+</section>
 
 {% endif %}
+
+
 
 {% endblock %}
