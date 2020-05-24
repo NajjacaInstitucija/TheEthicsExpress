@@ -2,7 +2,7 @@
 
 {% block head %}
 
-  <title>Registracija </title>
+  <title>Register </title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -19,31 +19,30 @@
     <div class="inner">
       <div class="flex flex-2">
         <div class="col col2">
-          <h3>Registriraj se</h3>
+          <h3>Register</h3>
             <form  method="post" action="#">
               <div class="row uniform">
                 <div class="6u 12u$(xsmall)">
                   <label for="username"><b>Username</b></label>
                   <br><input type="text" placeholder="Choose your username" name="username" id="username">
-                  <br> <br>
                 </div>
               <div class="6u$ 12u$(xsmall)">
                 <label for="password"><b>Password</b></label>
                 <br> <input type="password" placeholder="Choose your password" name="password" id="password">
-                <br> <br>
                 <label for="confirm"><b>Confirm password</b></label>
                 <br> <input type="password" placeholder="Confirm your password" name="confirm" id="confirm">
-                <br> <br>
                 </div>
-              <input type="submit" value="Register">
+                <ul class="actions"> <input type="submit" value="Register"> </ul>
+              <!-- <br><input type="submit" value="Register"> -->
             </form>
           </div>
-          <div class="col col1 first">
+         
+        </div>
+        <div class="col col1 first">
             <div class="image round fit">
-              <a href="generic.html" class="link"><img src="images/register.jpg" alt="" /></a>
+              <a><img src="{{ url_for('static', filename='images/register.jpg') }}" alt="" /></a>
             </div>
           </div>
-        </div>
       </section>
 </div>
 

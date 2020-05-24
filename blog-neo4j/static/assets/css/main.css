@@ -700,7 +700,7 @@
 		}
 
 		.row.uniform > * {
-			padding: 1.5em 0 0 1.5em;
+			padding: 1em 1em 1em 1em;
 		}
 
 		.row.uniform {
@@ -1669,7 +1669,7 @@
 
 	h1 {
 		font-size: 3em;
-		margin-bottom: .25em;
+		margin-bottom: .75em;
 	}
 
 		@media screen and (max-width: 736px) {
@@ -1701,7 +1701,7 @@
 		}
 
 	h3 {
-		font-size: 1.75em;
+		font-size: 2.75em;
 	}
 
 		@media screen and (max-width: 736px) {
@@ -1813,7 +1813,7 @@
 		}
 
 	strong, b {
-		color: #000;
+		color: white;
 	}
 
 	h1, h2, h3, h4, h5, h6 {
@@ -1884,6 +1884,7 @@
 		text-align: center;
 		text-decoration: none;
 		white-space: nowrap;
+		margin: 2em 2em;
 	}
 
 		input[type="submit"].icon,
@@ -2203,9 +2204,9 @@
 
 	label {
 		display: block;
-		font-size: 0.9em;
+		font-size: 1.9em;
 		font-weight: 700;
-		margin: 0 0 1em 0;
+		margin: 1em 0 0 0;
 	}
 
 	input[type="text"],
@@ -2220,7 +2221,7 @@
 		border-radius: 4px;
 		border: none;
 		border: solid 1px;
-		color: inherit;
+		color: white;
 		display: block;
 		outline: 0;
 		padding: 0 1em;
@@ -2273,6 +2274,7 @@
 	input[type="email"],
 	select {
 		height: 2.75em;
+		font-weight: bold;
 	}
 
 	textarea {
@@ -3128,7 +3130,7 @@
 			}
 
 			.wrapper.style2 h1, .wrapper.style2 h2, .wrapper.style2 h3, .wrapper.style2 h4, .wrapper.style2 h5, .wrapper.style2 h6 {
-				color: #fff;
+				color: dimgray;
 			}
 
 			.wrapper.style2 blockquote {
@@ -3225,7 +3227,7 @@
 			.wrapper.style2 input[type="email"],
 			.wrapper.style2 select,
 			.wrapper.style2 textarea {
-				background: rgba(255, 255, 255, 0.075);
+				background: white;
 				border-color: rgba(255, 255, 255, 0.075)
 			}
 
@@ -3514,11 +3516,11 @@
 			-webkit-animation: none;
 			-ms-animation: none;
 			animation: none;
-			background-color: transparent;
+			background-color: gray;
 			box-shadow: none;
 			overflow: hidden;
 			position: absolute;
-			top: 1.5em;
+			
 		}
 
 			#header.alt h1 {
@@ -3959,20 +3961,20 @@
 	}
 
 		#login:before {
-			-moz-transition: opacity 1s ease;
-			-webkit-transition: opacity 1s ease;
+			/* -moz-transition: opacity 1s ease; */
+			/* -webkit-transition: opacity 1s ease;
 			-ms-transition: opacity 1s ease;
 			transition: opacity 1s ease;
 			-moz-transition-delay: 1.25s;
 			-webkit-transition-delay: 1.25s;
 			-ms-transition-delay: 1.25s;
-			transition-delay: 1.25s;
+			transition-delay: 1.25s; */
 			content: '';
 			display: block;
 			background-color: #000;
 			height: 100%;
 			left: 0;
-			opacity: 0.65;
+			 opacity: 0.65; 
 			position: absolute;
 			top: 0;
 			width: 100%;
@@ -4040,7 +4042,7 @@
 /* Footer */
 
 	#footer {
-		padding: 6em 2em 4em 2em;
+		padding: inherit;
 	}
 
 		#footer > .inner {
