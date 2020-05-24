@@ -2,23 +2,41 @@
 
 {% block head %}
 
+  <title>Prijava</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
 {% endblock %}
 
 
 
 {% block body %}
-
+<div class="subpage">
 <h2>Login</h2>
-<div class='login'>
-    <form action="/login" method="POST">
-        <label for="username"><b>Username</b></label> 
-        <br><input type="text" placeholder="Enter username" name="username" id="username">
-        <br> <br>
-        <label for="password"><b>Password</b></label>
-        <br> <input type="password" placeholder="Enter password" name="password" id="password">
-        <br> <br>
-        <input type="submit" value="Login">
+<section id="login">
+  <div class='inner'>
+
+    <form method="post" action="#">
+
+        <div class="row uniform">
+          <div class="6u 12u$(xsmall)">
+            <label for="username"><b>Username</b></label>
+            <br><input type="text" placeholder="Enter username" name="username" id="username">
+            <br> <br>
+          </div>
+          <label for="password"><b>Password</b></label>
+          <div class="6u$ 12u$(xsmall)">
+            <br> <input type="password" placeholder="Enter password" name="password" id="password">
+            <br> <br>
+            <input type="submit" value="Login">
+        </div>
+      </div>
     </form>
+
+  </div>
+</section>
+
 
 </div>
 

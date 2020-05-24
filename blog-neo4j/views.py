@@ -1,7 +1,7 @@
 from flask import Flask, render_template,\
      url_for, request, redirect, flash, \
      session
-import os
+import os, sys
 from models import User, get_most_recent_posts, \
     Post, get_recent_posts, OutputPost, search_database
 
@@ -10,9 +10,11 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-
+dirname, filename = os.path.split(os.path.abspath(sys.argv[0]))
+dirname = dirname.replace("\\","/")
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
-app.config["IMAGE_UPLOADS"] = "C:\\Users\\stvar\\python\\blog-neo4j\\static\\images"
+# app.config["IMAGE_UPLOADS"] = "C:\\Users\\stvar\\python\\blog-neo4j\\static\\images"
+app.config["IMAGE_UPLOADS"] = os.path.join(dirname + '/', 'static/images')
 
 def allowed_image(filename):
 
