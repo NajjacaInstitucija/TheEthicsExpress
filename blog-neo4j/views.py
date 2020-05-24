@@ -10,10 +10,12 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
+
+app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
+#app.config["IMAGE_UPLOADS"] = "C:\\Users\\stvar\\python\\blog-neo4j\\static\\images"
 dirname, filename = os.path.split(os.path.abspath(sys.argv[0]))
 dirname = dirname.replace("\\","/")
-app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
-# app.config["IMAGE_UPLOADS"] = "C:\\Users\\stvar\\python\\blog-neo4j\\static\\images"
+app.config["IMAGE_DELETIONS"] = dirname
 app.config["IMAGE_UPLOADS"] = os.path.join(dirname + '/', 'static/images')
 
 def allowed_image(filename):
@@ -102,19 +104,22 @@ def new_post():
             
             elif allowed_image(pic.filename):
                 filename = secure_filename(pic.filename)
-                path = os.path.join(app.config["IMAGE_UPLOADS"], session['username'], "post")
-                file = os.path.join(path, filename)
+                short_path = os.path.join(app.config["IMAGE_UPLOADS"] + '/', session['username'])
+                path = os.path.join(short_path + '/', "post")
+                file = os.path.join(path + '/', filename)
                 
+                if not os.path.isdir(short_path):
+                    os.mkdir(short_path)
+
                 if not os.path.isdir(path):
                     os.mkdir(path)
 
                 if not os.path.isfile(file):
                     pic.save(file)
                 
-                pic_location = "\\static\\images\\" + session['username'] + "\\post\\" + filename
+                #pic_location = "\\static\\images\\" + session['username'] + "\\post\\" + filename
+                pic_location = "/static/images/" + session['username'] + "/post/" + filename
                 post_pics.append(pic_location)
-
-                #print(image_location.replace(',', '\\'))
 
             else: 
                 flash("You cannot upload that picture")
@@ -225,8 +230,12 @@ def change_profile_picture():
             
             elif allowed_image(image.filename):
                 filename = secure_filename(image.filename)
-                path = os.path.join(app.config["IMAGE_UPLOADS"], session['username'])
-                file = os.path.join(path, filename)
+                short_path = os.path.join(app.config["IMAGE_UPLOADS"] + '/', session['username'])
+                path = os.path.join(short_path + '/', "profile")
+                file = os.path.join(path + '/', filename)
+
+                if not os.path.isdir(short_path):
+                    os.mkdir(short_path)
                 
                 if not os.path.isdir(path):
                     os.mkdir(path)
@@ -234,9 +243,9 @@ def change_profile_picture():
                 if not os.path.isfile(file):
                     image.save(file)
                 
-                image_location = "\\static\\images\\" + session['username'] + "\\" + filename
+                #image_location = "\\static\\images\\" + session['username'] + "\\profile\\" + filename
+                image_location = "/static/images/" + session['username'] + "/profile/" + filename
 
-                #print(image_location.replace(',', '\\'))
                 User(session['username']).change_profile_picture(image_location)
                 return redirect(request.url)
 
@@ -283,6 +292,105 @@ def search():
 
     else:    
         return render_template('search_page.html')
+
+
+@app.route('/delete_post/<post_id>', methods=['GET', 'POST'])
+def delete_post(post_id):
+    post = Post(post_id)
+    
+    for pic_location in Post(post_id).find()['post_pics']:
+        #saved_path = pic_location.split('\\')
+        saved_path = pic_location.split('/')
+        base = app.config['IMAGE_DELETIONS']
+        for subdir in saved_path:
+            if subdir != '':
+                path = os.path.join(base + '/', subdir)
+                updir = base
+                base = path
+
+        try:
+            os.remove(path)
+        except OSError as ex:
+            print(ex)
+            print("Cannot delete that file.")
+        
+        try:
+            os.rmdir(updir)
+        except OSError as ex:
+            print(ex)
+            print("Directory is not empty.")
+
+
+    post.delete_comments()
+    post.delete_hashtags_only_on_that_post()
+    post.delete()
+    return redirect(url_for('index'))
+    
+
+@app.route('/edit_post/<post_id>', methods=['GET', 'POST'])
+def edit_post(post_id):
+    p = Post(post_id)
+    selected_post = p.find()
+    user = p.get_author()
+    hashtags = p.get_hashtags()
+    comments = p.get_comments()
+
+    if request.method == 'POST':
+        header = request.form['header']
+        hashtags = request.form['hashtags']
+        body = request.form['body']
+
+        if request.files:
+            post_pics = []
+            for pic in request.files.getlist("pics"):
+                if pic.filename == "":
+                    continue
+            
+                elif allowed_image(pic.filename):
+                    filename = secure_filename(pic.filename)
+                    short_path = os.path.join(app.config["IMAGE_UPLOADS"] + '/', session['username'])
+                    path = os.path.join(short_path + '/', "post")
+                    file = os.path.join(path + '/', filename)
+                
+                    if not os.path.isdir(short_path):
+                        os.mkdir(short_path)
+
+                    if not os.path.isdir(path):
+                        os.mkdir(path)
+
+                    if not os.path.isfile(file):
+                        pic.save(file)
+                
+                    #pic_location = "\\static\\images\\" + session['username'] + "\\post\\" + filename
+                    pic_location = "/static/images/" + session['username'] + "/post/" + filename
+                    post_pics.append(pic_location)
+
+                else: 
+                    flash("You cannot upload that picture")
+
+
+        if not header:
+            flash('Posting without header is just stupid')
+    
+        elif not body:
+            flash('Posting nothing. How fun')
+    
+        else:
+            Post(post_id).save_edited_post(header, body, post_pics)
+            post = Post(post_id)
+            old_hashtags = p.get_hashtags()
+            print(old_hashtags)
+            post.update_hashtags(old_hashtags, hashtags)
+            return redirect(url_for('index'))
+
+    else:
+        p = Post(post_id)
+        selected_post = p.find()    
+        user = p.get_author()
+        hashtags = p.get_hashtags()
+        comments = p.get_comments()
+        return render_template('edit_post.html', post=selected_post, user=user, hashtags=hashtags, comments=comments)
+
 
 
 if __name__ == "__main__":

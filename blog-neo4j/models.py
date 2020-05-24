@@ -128,15 +128,8 @@ class User:
                     )
                 graph.create(relation)
     
-    def get_my_posts(self):
-        #q = '''
-        #match (u:User)-[po:POSTED]->(p:Post)<-[ha:HASHTAGGING]-(h:Hashtag)
-        #where u.username = $uname
-        #return u, p, collect(h.tag) as htags
-        #order by p.timestamp desc
-        #'''
 
-        #return graph.run(q, uname=self.username)
+    def get_my_posts(self):
         p = graph.evaluate(
             '''
             match (u:User)-[po:POSTED]->(p:Post)
@@ -217,6 +210,14 @@ class Hashtag:
             ''', htag=self.tag
         )
         return ht
+    
+    def remove(self):
+        q = '''
+        match (h:Hashtag)
+        where h.tag=$htag
+        detach delete h
+        '''
+        graph.run(q, htag=self.tag)
 
 
 class Post:   
@@ -269,6 +270,72 @@ class Post:
         order by c.timestamp  
         '''
         return graph.run(q, pid=self.id)
+
+
+    def delete_comments(self):
+        q = '''
+        match (c:Comment)-[:ON]->(p:Post)
+        where p.id = $pid
+        detach delete c
+        '''
+        return graph.run(q, pid=self.id)
+
+    def delete_hashtags_only_on_that_post(self):
+        q = '''
+        match (h:Hashtag)-[:HASHTAGGING]->(p:Post)
+        where p.id = $pid
+        with p, h
+        match (oh:Hashtag)-[:HASHTAGGING]->(op:Post)    
+        where op.header <> p.header 
+        with collect(distinct h.tag) as only_this, collect(distinct oh.tag) as other_also
+        with [x in only_this where not x in other_also] as to_delete
+        unwind to_delete as td
+        match (t:Hashtag) 
+        where t.tag = td
+        detach delete t
+        '''
+
+        return graph.run(q, pid=self.id)
+
+    def delete(self):
+        q = '''
+        match (p:Post) 
+        where p.id = $pid
+        detach delete p 
+        '''
+        return graph.run(q, pid=self.id)
+    
+    def save_edited_post(self, header, body, post_pics):
+        q = '''
+        match (p:Post) where p.id = $pid
+        set p.header = $header, p.body = $body, p.post_pics = $post_pics
+        '''
+        return graph.run(q, pid=self.id, header=header, body=body, post_pics=post_pics)
+    
+    def update_hashtags(self, old_hashtags, hashtags):
+        new_htags = [htag.strip('#') for htag in hashtags.split(', ')]
+        new_set = set(new_htags)
+        old_set = set(old_hashtags)
+        new_but_not_old = new_set.difference(old_set)
+        for ht in new_but_not_old:
+            if len(ht) > 0:
+                if not Hashtag(ht).find():
+                    ht_node = Node('Hashtag', tag=ht)
+                   
+                else: 
+                    ht_node = Hashtag(ht).find()
+                
+                graph.create(ht_node)
+                relation = Relationship(
+                    ht_node,
+                    'HASHTAGGING',
+                    Post(self.id).find()
+                    )
+                graph.create(relation)
+
+        old_but_not_new = old_set.difference(new_set)
+        for oht in old_but_not_new:
+            Hashtag(oht).remove()
 
 
 
