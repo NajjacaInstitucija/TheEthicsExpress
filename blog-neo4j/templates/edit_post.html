@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+
+
+{% block body %}
+
+{% if session['username'] %}
+<hr>
+<br>
+<div class="edit_post">
+    <form action="/edit_post/{{post.id }}" enctype="multipart/form-data" method="POST">
+        <span class="post_header">Header: </span>
+        <input type="text" value="{{ post.header}}" name="header" size="40"><br> <br>
+        <span class="hashtags">Hashtags: </span>
+        <input type="text" value='#{{ ", #".join(hashtags) }}' name="hashtags" size="40"> <br> <br>
+        <br><textarea name="body" id="body" cols="40" rows="10">{{ post.body }}</textarea> <br> <br>
+        {% if post.post_pics %}
+        {% for pic in post.post_pics %}
+            <img src="{{ pic }}" alt="Slika posta" width="300" height="200">
+        {% endfor %}
+        {% endif %} 
+        <br> <br>
+        <span class="images">Images: 
+            <input type="file" name="pics" id="pics" multiple>
+        </span> <br> <br>
+        <input type="submit" value="Apply">
+    </form>
+</div>
+
+
+{% endif %}
+
+{% endblock %}

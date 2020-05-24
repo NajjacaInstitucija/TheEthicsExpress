@@ -12,6 +12,16 @@
     <li class="post">
         <b>{{ post.header }}</b>
         , posted on {{ post.date }} 
+        {% if session['username'] == user.username %}
+        <br><br>
+        <form action="/delete_post/{{ post.id }}" method="POST">
+            <input type="submit"  value="Delete post">
+        </form>
+        <br>
+        <form action="/edit_post/{{ post.id }}">
+            <input type="submit" value="Edit post">
+        </form>
+        {% endif %}
         <br> Author: 
         <b><a href="/profile/{{ user.username }}">
             {{ user.username }}
