@@ -17,9 +17,9 @@
 <div id="main">
     <section class="wrapper style1">
       <div class="inner">
-
+<div class="flex flex-3">
+<div class="col align-center">
 <h4>Posts which headers contain: <em>{{to_search}}</em></h4>
-
 <div class="posts_containing_word">
     <ul>
     {% for post in posts %}
@@ -32,36 +32,16 @@
                 </a> 
             <br> Hashtags:
             #{{ ", #".join(post.hashtags) }}
-            <br> <br>
-            <em>{{ post.post_details.body }}</em>
-            <br>
-            
-            <ul class="comments">
-                {% for comment in post.comments %}
-                <li class="comment">
-                    <b> <a href="/profile/{{ comment.u.username }}">{{ comment.u.username }}</a></b>
-                    <br> <em>{{ comment.c.body }}</em> <br>
-                </li>
-                {% endfor %}
-                
-            </ul>
-            <br>
-            <div class="new_comment">
-                <form action="/add_comment/{{ post.post_details.id }}" method="POST">
-                    <textarea placeholder="Comment this post..." name="comment" id="comment" cols="30" rows="3"></textarea>
-                    <br><input type="submit" value="Add comment">
-                </form>
-            </div>
+            <br>            <br>            
         </li>
          <br>
-         <br>
-         <hr>
     {% endfor %}
     </ul>
 </div>
+</div>
 
-<hr><hr>
 
+<div class="col align-center">
 <h4>Posts where one or more hashtags is (are) like: <em>{{to_search}}</em></h4>
 <div class="posts_containing_word">
     <ul>
@@ -75,35 +55,16 @@
                 </a> 
             <br> Hashtags:
             #{{ ", #".join(post.hashtags) }}
-            <br> <br>
-            <em>{{ post.post_details.body }}</em>
             <br>
-            
-            <ul class="comments">
-                {% for comment in post.comments %}
-                <li class="comment">
-                    <b> <a href="/profile/{{ comment.u.username }}">{{ comment.u.username }}</a></b>
-                    <br> <em>{{ comment.c.body }}</em> <br>
-                </li>
-                {% endfor %}
-                
-            </ul>
             <br>
-            <div class="new_comment">
-                <form action="/add_comment/{{ post.post_details.id }}" method="POST">
-                    <textarea placeholder="Comment this post..." name="comment" id="comment" cols="30" rows="3"></textarea>
-                    <br><input type="submit" value="Add comment">
-                </form>
-            </div>
         </li>
          <br>
-         <br>
-         <hr>
     {% endfor %}
     </ul>
 </div>
-<hr><hr>
+</div>
 
+<div class="col align-center">
 <h4>Users which usernames are like: <em>{{to_search}}</em></h4>
 
 <div class="users">
@@ -116,7 +77,8 @@
         {% endfor %}
         </ul>
 </div>
-
+</div>
+</div>
 </div>
 </section>
 </div>
