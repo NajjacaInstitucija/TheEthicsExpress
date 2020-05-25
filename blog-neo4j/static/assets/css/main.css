@@ -1840,6 +1840,8 @@
 		border: solid 1px;
 		margin-bottom: 2em;
 		padding: 1.5em;
+		float: center;
+		align-items: center;
 	}
 
 		.box > :last-child,
@@ -1980,7 +1982,7 @@
 		input[type="button"]:active,
 		button:active,
 		.button:active {
-			background-color: #258cd1;
+			background-color: #3878a3;
 		}
 
 		input[type="submit"].alt,
