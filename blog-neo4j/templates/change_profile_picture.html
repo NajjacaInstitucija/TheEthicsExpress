@@ -36,10 +36,13 @@
   <section id="lozpro">
     <div class='inner'>
        <h2> Upload profile picture: </h2>
-      <form action="/change_profile_picture" method="POST" enctype=multipart/form-data>
-          <input type="file" name="image" id="image">
-          <input type="submit" value="Apply">
-      </form>
+      <div class="row uniform">
+        <form action="/change_profile_picture" method="POST" enctype=multipart/form-data>
+            <input type="file" name="image" id="image">
+            <input type="submit" value="Apply">
+          </form>
+        
+      </div>
       <div class="tt">
       <h2>Current profile picture:</h2>
       <img src="{{ image }}" alt="{{ session['username'] }}'s profile picture">

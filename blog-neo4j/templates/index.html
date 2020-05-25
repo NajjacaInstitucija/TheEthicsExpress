@@ -2,6 +2,10 @@
 
 {% block head %}
 
+<title> Home</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
 {% endblock %}
 
 
@@ -9,19 +13,10 @@
 {% block body %}
 
 {% if session['username'] %}
-<hr>
-<br>
-<div class="new_post">
-    <form action="/new_post" method="POST">
-        <span class="post_header">Header: </span>
-        <input type="text" placeholder="Place head here" name="header" size="40"><br> <br>
-        <span class="hashtags">Hashtags: </span>
-        <input type="text" placeholder="Separate hashtags with commablank(, )" name="hashtags" size="40"> <br> <br>
-        <br><textarea placeholder="What's up?" name="body" id="" cols="40" rows="10"></textarea> <br> <br>
-        <input type="submit" value="Post">
-    </form>
-</div>
-
+<div id="main">
+    <section class="wrapper style1">
+      <div class="inner">
+<h2>Recent posts:</h2>
 <hr>
 <!--<div class="recent_posts">
     <ul>
@@ -69,7 +64,7 @@
                 <li class="comment">
                     <b> <a href="/profile/{{ comment.u.username }}">{{ comment.u.username }}</a></b>
                     <br> <em>{{ comment.c.body }}</em> <br>
-                </li>
+       -         </li>
                 {% endfor %}
 
             </ul>
@@ -86,6 +81,22 @@
          <hr>
     {% endfor %}
     </ul>
+
+    <h2>New post:</h2>
+    <hr>
+    <div class="new_post">
+        <form action="/new_post" method="POST">
+            <span class="post_header">Header: </span>
+            <input type="text" placeholder="Place head here" name="header" size="40"><br> <br>
+            <span class="hashtags">Hashtags: </span>
+            <input type="text" placeholder="Separate hashtags with commablank(, )" name="hashtags" size="40"> <br> <br>
+            <br><textarea placeholder="What's up?" name="body" id="" cols="40" rows="10"></textarea> <br> <br>
+            <input type="submit" value="Post">
+        </form>
+    </div>
+</div>
+</div>
+</section>
 </div>
 
 {% else %}

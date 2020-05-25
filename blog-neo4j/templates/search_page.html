@@ -2,6 +2,10 @@
 
 {% block head %}
 
+<title>Search </title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
 {% endblock %}
 
 
@@ -10,13 +14,28 @@
 
 {% if session['username'] %}
 
+
 <div class="search">
-    <form action="/search" method="POST">
-        <input type="text" name="to_search" id="to_search">
-        <br> <br>
-        <input type="submit" value="Search">
-    </form>
+  <div id="main">
+    <section class="wrapper style1">
+      <div class="inner">
+  <section class="6u$ 12u$(medium)">
+  <form action="/search" method="POST">
+<div class="row uniform">
+      <div class="9u 12u$(small)">
+         <input type="text" name="to_search" id="to_search">
+  </div>
+        <div class="3u$ 12u$(small)">
+        <input type="submit" value="Search" class="button special">
+  </div>
+  </div>
+  </form>
+  </section>
 </div>
+</section>
+</div>
+</div>
+
 {% endif %}
 
 {% endblock %}

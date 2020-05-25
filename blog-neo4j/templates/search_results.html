@@ -2,6 +2,11 @@
 
 {% block head %}
 
+<title>Search results </title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
 {% endblock %}
 
 
@@ -9,8 +14,11 @@
 {% block body %}
 
 {% if session['username'] %}
+<div id="main">
+    <section class="wrapper style1">
+      <div class="inner">
 
-<h3>Posts which headers contain: <em>{{to_search}}</em></h3>
+<h4>Posts which headers contain: <em>{{to_search}}</em></h4>
 
 <div class="posts_containing_word">
     <ul>
@@ -54,7 +62,7 @@
 
 <hr><hr>
 
-<h3>Posts where one or more hashtags is (are) like: <em>{{to_search}}</em></h3>
+<h4>Posts where one or more hashtags is (are) like: <em>{{to_search}}</em></h4>
 <div class="posts_containing_word">
     <ul>
     {% for post in posts_having_hashtags %}
@@ -96,19 +104,22 @@
 </div>
 <hr><hr>
 
-<h3>Users which usernames are like: <em>{{to_search}}</em></h3>
+<h4>Users which usernames are like: <em>{{to_search}}</em></h4>
 
 <div class="users">
     <ul>
         {% for user in users %}
             <li class="user">
-                <b> <a href="/profile/{{ user.username }}">{{ user.username }}</a></b>
+                 <a href="/profile/{{ user.username }}">{{ user.username }}</a>
             </li>
              
         {% endfor %}
         </ul>
 </div>
 
+</div>
+</section>
+</div>
 {% endif %}
 
 {% endblock %}
