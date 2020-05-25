@@ -14,6 +14,28 @@
 {% block body %}
 
 {% if session['username'] %}
+
+<div class="search">
+    <div id="main">
+      <section class="wrapper style1">
+        <div class="inner">
+    <section class="6u$ 12u$(medium)">
+    <form action="/search" method="POST">
+  <div class="row uniform">
+        <div class="9u 12u$(small)">
+           <input type="text" name="to_search" id="to_search">
+    </div>
+          <div class="3u$ 12u$(small)">
+          <input type="submit" value="Search" class="button special">
+    </div>
+    </div>
+    </form>
+    </section>
+  </div>
+  </section>
+  </div>
+  </div>
+  
 <div id="main">
     <section class="wrapper style1">
       <div class="inner">
