@@ -2,6 +2,28 @@
 
 {% block head %}
 
+<title>Postavke </title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    .tab {
+      display: grid;
+      align-items: stretch;
+      background-color: white;
+      color: gray;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      font-size: 180%;
+    }
+
+    a:hover {
+    color: lightskyblue;
+    text-decoration: underline;
+    }
+  </style>
+  
+  
+
 {% endblock %}
 
 
@@ -10,11 +32,27 @@
 
 {% if session['username'] %}
 
-<ul class="settings_links">
-    <li><a href="/change_password">Change password</a></li>
-    <li><a href="/change_profile_picture">Change profile picture</a></li>
-</ul>
+<div id="main">
+  <section class="wrapper">
+    <div class="inner">
+     
+        
+            <a class="tab" href="/change_password">Change password</a>
+            <a class="tab" href="/change_profile_picture">Change profile picture</a>
+        
+         
+      
+      <div class="col col1 first">
+          <div class="image right" >
+            <a><img src="{{ url_for('static', filename='images/settings.jpg') }}" alt="" /></a>
+          </div>
+        </div>
+    </div> 
+  </section>
+</div>
 
 {% endif %}
+
+
 
 {% endblock %}

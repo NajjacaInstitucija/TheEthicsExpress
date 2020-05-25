@@ -2,6 +2,28 @@
 
 {% block head %}
 
+<title>Change profile picture </title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    .tt {
+      float: center;
+      width: 500px;
+      padding: 10px;
+      text-align: center;      
+    }
+
+    img {
+      float: center;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 60%;
+    }
+  </style>
+
+
 {% endblock %}
 
 
@@ -10,15 +32,20 @@
 
 {% if session['username'] %}
 
- <h1>Upload profile picture</h1>
-<div class="settings">
-    <form action="/change_profile_picture" method="POST" enctype=multipart/form-data>
-        <input type="file" name="image" id="image">
-        <input type="submit" value="Apply">
-    </form>
-    <br><br>
-    Current profile picture: <br>
-    <img src="{{ image }}" alt="{{ session['username'] }}'s profile picture">
+<div class="lozpro">
+  <section id="lozpro">
+    <div class='inner'>
+       <h2> Upload profile picture: </h2>
+      <form action="/change_profile_picture" method="POST" enctype=multipart/form-data>
+          <input type="file" name="image" id="image">
+          <input type="submit" value="Apply">
+      </form>
+      <div class="tt">
+      <h2>Current profile picture:</h2>
+      <img src="{{ image }}" alt="{{ session['username'] }}'s profile picture">
+      </div>
+    </div>
+  </section>
 </div>
 {% endif %}
 

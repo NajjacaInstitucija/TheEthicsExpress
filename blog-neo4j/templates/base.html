@@ -6,7 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/main.css') }}">
 
-    {% block head %}{% endblock %}
+    <style>
+        .specialt {
+          background-color: black;
+          color: white;
+          display: grid;
+          align-items: center;
+        }
+        </style>
+
+    {% block head %}
+    
+    {% endblock %}
 </head>
 
 <body class="subpage">
@@ -33,19 +44,19 @@
                 {% endif %}
 
             </ul>
+            <div class="specialt">
+                {% if session['username'] %}
+                <span >Logged in as: {{session['username']}}</span>
+    
+                <form action="/logout" method="post">
+                    <br>
+                    <input type="submit" value="Logout">
+                </form>
+    
+                {% endif %}
+            </div>
         </nav>
 
-        <div class="login">
-            {% if session['username'] %}
-            <span >Logged in as: {{session['username']}}</span>
-
-            <form action="/logout" method="post">
-                <br>
-                <input type="submit" value="Logout">
-            </form>
-
-            {% endif %}
-        </div>
 
     </div>
 
