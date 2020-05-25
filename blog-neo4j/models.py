@@ -60,7 +60,7 @@ def get_recent_posts():
 
 class User:
     def __init__(self, username):
-        self.username = username
+        self.username = username.lower()
     
     def find(self):
         user = graph.evaluate(
@@ -111,7 +111,7 @@ class User:
             post
         )
         graph.create(relation)
-        htags = [htag.strip('#') for htag in hashtags.split(', ')]
+        htags = [htag.strip('#').lower() for htag in hashtags.split(', ')]
         for ht in set(htags):
             if len(ht) > 0:
                 if not Hashtag(ht).find():
@@ -199,7 +199,7 @@ class User:
 
 class Hashtag:
     def __init__(self, tag):
-        self.tag = tag
+        self.tag = tag.lower()
     
     def find(self):
         ht = graph.evaluate(
@@ -313,7 +313,7 @@ class Post:
         return graph.run(q, pid=self.id, header=header, body=body, post_pics=post_pics)
     
     def update_hashtags(self, old_hashtags, hashtags):
-        new_htags = [htag.strip('#') for htag in hashtags.split(', ')]
+        new_htags = [htag.strip('#').lower() for htag in hashtags.split(', ')]
         new_set = set(new_htags)
         old_set = set(old_hashtags)
         new_but_not_old = new_set.difference(old_set)
@@ -336,6 +336,50 @@ class Post:
         old_but_not_new = old_set.difference(new_set)
         for oht in old_but_not_new:
             Hashtag(oht).remove()
+
+
+class Comment:
+    def __init__(self, cid):
+        self.id = cid
+
+    
+    
+    def find(self):
+        c = graph.evaluate(
+            '''
+            match (c:Comment) 
+            where c.id=$cid
+            return c 
+            ''', cid=self.id
+        )
+        return c
+    
+    def get_post_id(self):
+        pid = graph.evaluate( '''
+        match (c:Comment)-[o:ON]->(p:Post)
+        where c.id = $cid
+        return p.id
+        ''', cid=self.id
+        )
+        return pid 
+    
+    def delete(self):
+        q = '''
+        match (c:Comment)
+        where c.id = $cid
+        detach delete c
+        '''
+        return graph.run(q, cid=self.id)
+    
+
+    def save_edited_comment(self, new_body):
+        q = '''
+        match (c:Comment)
+        where c.id = $cid
+        set c.body = $new_body
+        '''
+        return graph.run(q, cid=self.id, new_body=new_body)
+
 
 
 
@@ -374,3 +418,4 @@ def search_database(to_search):
         ''', ts=to_search
     )
     return p,ph,u
+

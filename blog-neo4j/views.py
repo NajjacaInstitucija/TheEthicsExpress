@@ -3,7 +3,7 @@ from flask import Flask, render_template,\
      session
 import os, sys
 from models import User, get_most_recent_posts, \
-    Post, get_recent_posts, OutputPost, search_database
+    Post, get_recent_posts, OutputPost, search_database, Comment
 
 from werkzeug.utils import secure_filename
 
@@ -95,9 +95,9 @@ def new_post():
     header = request.form['header']
     hashtags = request.form['hashtags']
     body = request.form['body']
-
-    if request.files:
-        post_pics = []
+    post_pics = []
+    
+    if request.files:    
         for pic in request.files.getlist("pics"):
             if pic.filename == "":
                 continue
@@ -188,7 +188,7 @@ def new_comment(post_id):
         else:
             User(commentator).add_comment(pid, text)
 
-    return redirect(url_for('index'))  
+    return open_post(post_id)  
 
 
 @app.route('/settings')
@@ -339,9 +339,9 @@ def edit_post(post_id):
         header = request.form['header']
         hashtags = request.form['hashtags']
         body = request.form['body']
-
-        if request.files:
-            post_pics = []
+        post_pics = []
+        
+        if request.files:    
             for pic in request.files.getlist("pics"):
                 if pic.filename == "":
                     continue
@@ -381,7 +381,7 @@ def edit_post(post_id):
             old_hashtags = p.get_hashtags()
             print(old_hashtags)
             post.update_hashtags(old_hashtags, hashtags)
-            return redirect(url_for('index'))
+            return open_post(post_id)
 
     else:
         p = Post(post_id)
@@ -392,6 +392,39 @@ def edit_post(post_id):
         return render_template('edit_post.html', post=selected_post, user=user, hashtags=hashtags, comments=comments)
 
 
+
+@app.route('/delete_comment/<comment_id>', methods=['GET', 'POST'])
+def delete_comment(comment_id):
+    comment = Comment(comment_id)
+    post_id = comment.get_post_id() 
+    comment.delete()
+    return open_post(post_id)
+
+@app.route('/edit_comment/<comment_id>', methods=['GET', 'POST'])
+def edit_comment(comment_id):
+    selected_comment = Comment(comment_id).find()
+    post_id = Comment(comment_id).get_post_id()
+    p = Post(post_id)
+    selected_post = p.find()
+    user = p.get_author()
+    hashtags = p.get_hashtags()
+    comments = p.get_comments()
+    return render_template(
+        'edit_comment.html',
+        post=selected_post,
+        user=user,
+        hashtags=hashtags,
+        comments=comments,
+        selected_comment=selected_comment     
+        )
+    
+
+@app.route('/save_edited_comment/<comment_id>', methods=['GET', 'POST'])
+def save_comment(comment_id):
+    new_body = request.form['edit_comment']
+    Comment(comment_id).save_edited_comment(new_body)
+    post_id = Comment(comment_id).get_post_id()
+    return open_post(post_id)
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(24)
