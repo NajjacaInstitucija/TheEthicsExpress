@@ -30,22 +30,22 @@
                     {{ post.author.username }}
                 </a>
             <br> Hashtags:
-            #{{ ", #".join(post.hashtags) }}
-               
+            #{{ ", #".join(post.hashtags) }}  
             <br> Post: <ul>
-            <em>{{ post.post_details.body }}</em>
-            </ul> <ul>
+            <em>{{ post.post_details.body | safe }}</em>
+            <br>
             {% if post.post_details.post_pics %}
             {% for pic in post.post_details.post_pics %}
                 <img src="{{ pic }}" alt="Slika posta" width="300" height="200">
             {% endfor %}
-            {% endif %}</ul>
+            {% endif %} 
+            </ul> 
         </div>
             <ul class="comments">
                 {% for comment in post.comments %}
                 <li class="comment">
                     <b> <a href="/profile/{{ comment.u.username }}">{{ comment.u.username }}</a></b>
-                    <br> <em>{{ comment.c.body }}</em> <br>
+                    <em>{{ comment.c.body | safe }}</em> <br>
        -         </li>
                 {% endfor %}
 
@@ -69,7 +69,7 @@
             <input type="text" placeholder="Place head here" name="header" size="40"><br> <br>
             <span class="hashtags">Hashtags: </span>
             <input type="text" placeholder="Separate hashtags with commablank(, )" name="hashtags" size="40"> <br> <br>
-            <br><textarea placeholder="What's up?" name="body" id="" cols="40" rows="10"></textarea> <br> <br>
+            <br><textarea placeholder="What's up?" name="body" id="" value="{{ body }}" cols="40" rows="10"></textarea> <br> <br>
             <span class="images">Images: 
                 <input type="file" name="pics" id="pics" multiple>
             </span> <br> <br>
