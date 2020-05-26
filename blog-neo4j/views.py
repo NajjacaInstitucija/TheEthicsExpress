@@ -52,19 +52,24 @@ def register():
         username = request.form['username']
         password = request.form['password']
         confirmed = request.form['confirm']
-        
+
         if len(username) < 1:
             flash('Username cannot be empty')
-        
+
         elif len(password) < 1:
             flash('Password cannot be empty')
-        
+
         elif password != confirmed:
             flash('Passwords do not match')
-        
+
         elif not User(username).register(password):
             flash('Username already exists')
-        
+
+        else:
+            session['username'] = username
+            flash('Logged in.')
+            return redirect(url_for('index'))
+
     return render_template('register.html')
 
 
@@ -73,7 +78,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-    
+
         if not User(username).verify(password):
             flash('Invalid username or password')
 
@@ -81,8 +86,8 @@ def login():
             session['username'] = username
             flash('Login successful')
             return redirect(url_for('index'))
-    
-    return render_template('login.html') 
+
+    return render_template('login.html')
 
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -101,18 +106,18 @@ def new_post():
     body = new_body
 
     post_pics = []
-    
-    if request.files:    
+
+    if request.files:
         for pic in request.files.getlist("pics"):
             if pic.filename == "":
                 continue
-            
+
             elif allowed_image(pic.filename):
                 filename = secure_filename(pic.filename)
                 short_path = os.path.join(app.config["IMAGE_UPLOADS"] + '/', session['username'])
                 path = os.path.join(short_path + '/', "post")
                 file = os.path.join(path + '/', filename)
-                
+
                 if not os.path.isdir(short_path):
                     os.mkdir(short_path)
 
@@ -121,24 +126,24 @@ def new_post():
 
                 if not os.path.isfile(file):
                     pic.save(file)
-                
+
                 #pic_location = "\\static\\images\\" + session['username'] + "\\post\\" + filename
                 pic_location = "/static/images/" + session['username'] + "/post/" + filename
                 post_pics.append(pic_location)
 
-            else: 
+            else:
                 flash("You cannot upload that picture")
 
 
     if not header:
         flash('Posting without header is just stupid')
-    
+
     elif not body:
         flash('Posting nothing. How fun')
-    
+
     else:
         User(session['username']).new_post(header, hashtags, body, post_pics)
-    
+
     return redirect(url_for('index'))
 
 @app.route('/profile/<username>')
@@ -178,7 +183,7 @@ def open_post(post_id):
         post=selected_post,
         user=user,
         hashtags=hashtags,
-        comments=comments     
+        comments=comments
         )
 
 @app.route('/add_comment/<post_id>', methods=['GET', 'POST'])
@@ -193,11 +198,11 @@ def new_comment(post_id):
         text = new_text
         if not text:
             flash('This blog prohibits silent comments')
-    
+
         else:
             User(commentator).add_comment(pid, text)
 
-    return open_post(post_id)  
+    return open_post(post_id)
 
 
 @app.route('/settings')
@@ -213,13 +218,13 @@ def change_password():
 
         if not User(session['username']).verify(old):
             flash('That is not your password')
-        
+
         elif new != confirm:
             flash('New passwords do not match')
 
         else:
             User(session['username']).change_password(new)
-            flash('Password successfully changed') 
+            flash('Password successfully changed')
 
 
     return render_template ('change_password.html')
@@ -236,7 +241,7 @@ def change_profile_picture():
 
             if image.filename == "":
                 return redirect(request.url)
-            
+
             elif allowed_image(image.filename):
                 filename = secure_filename(image.filename)
                 short_path = os.path.join(app.config["IMAGE_UPLOADS"] + '/', session['username'])
@@ -245,20 +250,20 @@ def change_profile_picture():
 
                 if not os.path.isdir(short_path):
                     os.mkdir(short_path)
-                
+
                 if not os.path.isdir(path):
                     os.mkdir(path)
 
                 if not os.path.isfile(file):
                     image.save(file)
-                
+
                 #image_location = "\\static\\images\\" + session['username'] + "\\profile\\" + filename
                 image_location = "/static/images/" + session['username'] + "/profile/" + filename
 
                 User(session['username']).change_profile_picture(image_location)
                 return redirect(request.url)
 
-            else: 
+            else:
                 flash("You cannot upload that.")
                 return redirect(request.url)
 
@@ -276,7 +281,7 @@ def search():
     if request.method == 'POST':
         to_search = request.form['to_search']
         searched_posts, phh, users = search_database(to_search)
-        
+
         posts = []
         for p in searched_posts:
             post = Post(p['id'])
@@ -286,7 +291,7 @@ def search():
             comments = post.get_comments()
             rp = OutputPost(post_details, author, hashtags, comments)
             posts.append(rp)
-        
+
         posts_having_hashtags = []
         for ph in phh:
             post = Post(ph['id'])
@@ -296,17 +301,17 @@ def search():
             comments = post.get_comments()
             hashtag_post = OutputPost(post_details, author, hashtags, comments)
             posts_having_hashtags.append(hashtag_post)
-        
+
         return render_template('search_results.html', posts=posts, posts_having_hashtags=posts_having_hashtags, users=users, to_search=to_search)
 
-    else:    
+    else:
         return render_template('search_page.html')
 
 
 @app.route('/delete_post/<post_id>', methods=['GET', 'POST'])
 def delete_post(post_id):
     post = Post(post_id)
-    
+
     for pic_location in Post(post_id).find()['post_pics']:
         #saved_path = pic_location.split('\\')
         saved_path = pic_location.split('/')
@@ -322,7 +327,7 @@ def delete_post(post_id):
         except OSError as ex:
             print(ex)
             print("Cannot delete that file.")
-        
+
         try:
             os.rmdir(updir)
         except OSError as ex:
@@ -334,7 +339,7 @@ def delete_post(post_id):
     post.delete_hashtags_only_on_that_post()
     post.delete()
     return redirect(url_for('index'))
-    
+
 
 @app.route('/edit_post/<post_id>', methods=['GET', 'POST'])
 def edit_post(post_id):
@@ -359,17 +364,17 @@ def edit_post(post_id):
         elif radio == 'replace':
             post_pics = []
 
-        if request.files and radio != 'keep':    
+        if request.files and radio != 'keep':
             for pic in request.files.getlist("pics"):
                 if pic.filename == "":
                     continue
-            
+
                 elif allowed_image(pic.filename):
                     filename = secure_filename(pic.filename)
                     short_path = os.path.join(app.config["IMAGE_UPLOADS"] + '/', session['username'])
                     path = os.path.join(short_path + '/', "post")
                     file = os.path.join(path + '/', filename)
-                
+
                     if not os.path.isdir(short_path):
                         os.mkdir(short_path)
 
@@ -378,21 +383,21 @@ def edit_post(post_id):
 
                     if not os.path.isfile(file):
                         pic.save(file)
-                
+
                     #pic_location = "\\static\\images\\" + session['username'] + "\\post\\" + filename
                     pic_location = "/static/images/" + session['username'] + "/post/" + filename
                     post_pics.append(pic_location)
 
-                else: 
+                else:
                     flash("You cannot upload that picture")
 
 
         if not header:
             flash('Posting without header is just stupid')
-    
+
         elif not body:
             flash('Posting nothing. How fun')
-    
+
         else:
 
             if len(post_pics) > 3:
@@ -406,7 +411,7 @@ def edit_post(post_id):
 
     else:
         p = Post(post_id)
-        selected_post = p.find()    
+        selected_post = p.find()
         user = p.get_author()
         hashtags = p.get_hashtags()
         comments = p.get_comments()
@@ -417,7 +422,7 @@ def edit_post(post_id):
 @app.route('/delete_comment/<comment_id>', methods=['GET', 'POST'])
 def delete_comment(comment_id):
     comment = Comment(comment_id)
-    post_id = comment.get_post_id() 
+    post_id = comment.get_post_id()
     comment.delete()
     return open_post(post_id)
 
@@ -436,9 +441,9 @@ def edit_comment(comment_id):
         user=user,
         hashtags=hashtags,
         comments=comments,
-        selected_comment=selected_comment     
+        selected_comment=selected_comment
         )
-    
+
 
 @app.route('/save_edited_comment/<comment_id>', methods=['GET', 'POST'])
 def save_comment(comment_id):

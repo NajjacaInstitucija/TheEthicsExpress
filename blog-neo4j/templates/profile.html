@@ -21,7 +21,7 @@
             <td>
                 {% if image %}
                 <div class="image" >
-                    <img src="{{ image }}" alt="{{ username }}'s profile picture">
+                    <img src="{{ image }}" alt="{{ username }}'s profile picture" width="200">
                     
                 </div>
                 {% endif %}
@@ -47,27 +47,32 @@
 
                 {% if post.post_details.post_pics %}
                 {% for pic in post.post_details.post_pics %}
-                    <img src="{{ pic }}" alt="Slika posta" width="300" height="200">
+                    <img src="{{ pic }}" alt="Slika posta" width="300" height="">
                 {% endfor %}
                 {% endif %} 
                 
             </div>
                 
                 <ul class="comments">
+                    <h4>Comments</h4>
                     {% for comment in post.comments %}
-                    <li class="comment">
-                        <b> <a href="/profile/{{ comment.u.username }}">{{ comment.u.username }}</a></b>
+                    <div class="box">
+                        Author:<b>
+                        <a href="/profile/{{ comment.u.username }}">
+                            {{ comment.u.username }}
+                        </a></b>
                         <br> <em>{{ comment.c.body | safe }}</em> 
-                    </li>
+                    </div>
                     {% endfor %}
                     
                 </ul>
             
                 <br>
+                <h4>Add new comment</h4>
                 <div class="new_comment">
                     <form action="/add_comment/{{ post.post_details.id }}" method="POST">
                         <textarea placeholder="Comment this post..." name="comment" id="comment" cols="30" rows="3"></textarea>
-                        <br><input type="submit" value="Add comment">
+                        <input type="submit" value="Add comment">
                     </form>
                 </div>
             </div>
