@@ -45,7 +45,9 @@
         </nav>
         
     </div>
-
+    {% for message in get_flashed_messages() %}
+    <div class="error_message">{{ message }}</div>
+    {% endfor %}
     {% block body %}{% endblock %}
     <footer id="footer">
       <div class="copyright">
