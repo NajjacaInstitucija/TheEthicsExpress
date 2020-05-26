@@ -448,7 +448,7 @@ def edit_comment(comment_id):
 @app.route('/save_edited_comment/<comment_id>', methods=['GET', 'POST'])
 def save_comment(comment_id):
     #new_body = request.form['edit_comment']
-    body = request.form.get("body")
+    body = request.form.get('edit_comment')
     body2 = body.split('\n')
     new_body = ''.join(['<br>' + line for line in body2])
     body = new_body
