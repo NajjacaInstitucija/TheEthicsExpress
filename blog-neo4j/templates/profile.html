@@ -1,99 +1,81 @@
 {% extends 'base.html' %}
 
 {% block head %}
-
-<title>Profil </title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Profile </title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 {% endblock %}
 
-
-
 {% block body %}
+<div class="subpage">
 
-
-Viewing {{ username }}'s profile
-<br><br>
-<!--
-<div class="user_posts">
-    <ul>
-        {% for post in posts %}
-            <li class="simple_post">
-                <b><a href="/post/{{post.p.id}}">{{ post.p.header }}</a></b>, posted on {{ post.p.date }} 
-                <br>
-                Author: {{ post.u.username }}
-                <br> Hashtags:
-                #{{ ", #".join(post.htags) }}
-                <br> <br>
-                <em>{{ post.p.body }}</em>
-                <br>
-                
-            </li>
-             <br>
-             <br>
+    <section class="wrapper style1">
+    <div class="inner">
+    <section class="20u$ 10u$(medium)">
+        <table>
+            <td>
+                <h2> Viewing {{ username }}'s profile </h2>
+            </td>
+            <td>
+                {% if image %}
+                <div class="image" >
+                    <img src="{{ image }}" alt="{{ username }}'s profile picture">
+                    
+                </div>
+                {% endif %}
+            </td>
+        </table>
         
-        {% else %}
-        <li>No posts from {{ username }}</li>
-        {% endfor %}
-    </ul>
-    <br><br>
-    <div class="image">
-        <img src="{{ image }}" alt="{{ username }}'s profile picture">
+        <hr>   
+        <br>
+        <div class="recent_posts">
+            <ul>
         
-    </div>
+            {% for post in my_posts %}
+            <div class="box">
+            <ol class="simple_post">
+                <b><a href="/post/{{ post.post_details.id }}">{{ post.post_details.header }}</a></b>, posted on {{ post.post_details.date }} 
+                <br>
 
-</div>
--->
-<div class="my_posts">
-    <ul>
-    {% for post in my_posts %}
-        <li class="simple_post">
-            <b><a href="/post/{{ post.post_details.id }}">{{ post.post_details.header }}</a></b>, posted on {{ post.post_details.date }} 
-            <br>
-            Author: 
-                <a href="/profile/{{ post.author.username }}">
-                    {{ post.author.username }}
-                </a> 
-            <br> Hashtags:
-            #{{ ", #".join(post.hashtags) }}
-            <br> <br>
-            {% if post.post_details.post_pics %}
-            {% for pic in post.post_details.post_pics %}
-                <img src="{{ pic }}" alt="Slika posta" width="300" height="200">
-            {% endfor %}
-            {% endif %} 
-            <br><br>
-            <em>{{ post.post_details.body }}</em>
-            <br>
-            
-            <ul class="comments">
-                {% for comment in post.comments %}
-                <li class="comment">
-                    <b> <a href="/profile/{{ comment.u.username }}">{{ comment.u.username }}</a></b>
-                    <br> <em>{{ comment.c.body }}</em> <br>
-                </li>
+                Hashtags:
+                #{{ ", #".join(post.hashtags) }}
+                <br>
+                <em>{{ post.post_details.body }}</em>
+                <br>
+
+                {% if post.post_details.post_pics %}
+                {% for pic in post.post_details.post_pics %}
+                    <img src="{{ pic }}" alt="Slika posta" width="300" height="200">
+                    <br>
                 {% endfor %}
+                {% endif %} 
                 
-            </ul>
-            <br>
-            <div class="new_comment">
-                <form action="/add_comment/{{ post.post_details.id }}" method="POST">
-                    <textarea placeholder="Comment this post..." name="comment" id="comment" cols="30" rows="3"></textarea>
-                    <br><input type="submit" value="Add comment">
-                </form>
             </div>
-        </li>
-         <br>
-         <br>
-         <hr>
-    {% endfor %}
-    </ul>
+                
+                <ul class="comments">
+                    {% for comment in post.comments %}
+                    <li class="comment">
+                        <b> <a href="/profile/{{ comment.u.username }}">{{ comment.u.username }}</a></b>
+                        <br> <em>{{ comment.c.body }}</em> 
+                    </li>
+                    {% endfor %}
+                    
+                </ul>
+            
+                <br>
+                <div class="new_comment">
+                    <form action="/add_comment/{{ post.post_details.id }}" method="POST">
+                        <textarea placeholder="Comment this post..." name="comment" id="comment" cols="30" rows="3"></textarea>
+                        <br><input type="submit" value="Add comment">
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+        </ul>
+        </div>
+    </section>
 </div>
-
-<br><br>
-    <div class="image">
-        <img src="{{ image }}" alt="{{ username }}'s profile picture">
-        
-    </div>
+</section>
+</div>
 {% endblock %}

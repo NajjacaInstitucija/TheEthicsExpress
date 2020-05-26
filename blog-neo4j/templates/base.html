@@ -5,24 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/main.css') }}">
-
-    <style>
-        .specialt {
-          background-color: black;
-          color: white;
-          display: grid;
-          align-items: center;
-        }
-        </style>
-
+    
     {% block head %}
     
     {% endblock %}
 </head>
 
 <body class="subpage">
-
-
       <header id="header" class="alt">
 
         <a href="#menu">Menu</a>
@@ -33,18 +22,17 @@
                 <li><a href="/">Home</a></li>
                 {% if session['username'] %}
                 <li><a href="/search">Search</a></li>
-                <li><a href="/profile/{{ session.username }}">Profile</a></li>
-                <li><a href="/similar_users">Similar users</a></li>
+                <li><a href="/profile/{{ session.username }}">My profile</a></li>
                 <li><a href="/settings">Settings</a></li>
+                <li><a href="/similar_users">Similar users</a></li>
                 {% endif %}
 
                 {% if not session['username'] %}
                 <li><a href="/register">Register</a></li>
                 <li><a href="/login">Login</a></li>
                 {% endif %}
-
             </ul>
-            <div class="specialt">
+            
                 {% if session['username'] %}
                 <span >Logged in as: {{session['username']}}</span>
     
@@ -52,12 +40,10 @@
                     <br>
                     <input type="submit" value="Logout">
                 </form>
-    
-                {% endif %}
-            </div>
+                {% endif %} 
+
         </nav>
-
-
+        
     </div>
 
     {% block body %}{% endblock %}

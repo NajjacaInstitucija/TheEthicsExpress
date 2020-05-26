@@ -23,20 +23,17 @@
     }
   </style>
 
-
 {% endblock %}
-
-
 
 {% block body %}
 
 {% if session['username'] %}
-
+<div class="subpage">
 <div class="lozpro">
   <section id="lozpro">
     <div class='inner'>
        <h2> Upload profile picture: </h2>
-      <div class="row uniform">
+       <div class="row uniform">
         <form action="/change_profile_picture" method="POST" enctype=multipart/form-data>
             <input type="file" name="image" id="image">
             <input type="submit" value="Apply">
@@ -49,6 +46,7 @@
       </div>
     </div>
   </section>
+</div>
 </div>
 {% endif %}
 

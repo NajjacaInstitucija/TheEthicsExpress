@@ -3,29 +3,41 @@
 {% block head %}
 
 <title>Similar users </title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 {% endblock %}
 
 
-
 {% block body %}
+<div class="subpage">
+<section class="wrapper style1">
+<div class="inner">
+    <h2>My similar users<hr></h2>
 
-{% if session['username'] %}
+        {% if session['username'] %}
 
-<ul class="similar">
-    {% for user in similars %}
-    <li>
-        <a href="\profile\{{ user.similar.username }}">{{ user.similar.username }}</a>
-        <br>
-        You both used hashtags: #{{ ", #".join(user.htags) }} 
-    </li>
-    <br>
+        <ul class="similar">
+            {% for user in similars %}
 
-    {% endfor %}
-</ul>
+            <div class="box">
+                {% if user.similar.image %}                
+                    <img src="{{ user.similar.image }}" alt="{{ user.similar.username }}'s profile picture" width="70px">
+                    <br>
+                {% endif %}
 
-{% endif %}
+                <a href="\profile\{{ user.similar.username }}">{{ user.similar.username }}</a>
+                <br>
+                
+                You both used hashtags: #{{ ", #".join(user.htags) }} 
+            </div>
+                        
+            {% endfor %}
+        </ul>
+
+        {% endif %}
+    </div>
+    </section>
+</div>
 
 {% endblock %}
