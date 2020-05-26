@@ -24,7 +24,7 @@
         #{{ ", #".join(hashtags) }}
         <br> Post: <ul>
 
-        <em> {{ post.body }} </em>
+        <em> {{ post.body | safe }} </em>
         <br> <br>
         {% if post.post_pics %}
         {% for pic in post.post_pics %}
@@ -40,7 +40,7 @@
             </a></b>
             <br>
             {% if comment.c.id != selected_comment.id %}
-            <em>{{ comment.c.body }}</em>
+            <em>{{ comment.c.body | safe }}</em>
             {% else %}
             <div class="edit_comment">
                 <form action="/save_edited_comment/{{ selected_comment.id }}" method="POST">
