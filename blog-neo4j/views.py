@@ -347,7 +347,11 @@ def edit_post(post_id):
     if request.method == 'POST':
         header = request.form['header']
         hashtags = request.form['hashtags']
-        body = request.form['body']
+        #body = request.form['body']
+        body = request.form.get("body")
+        body2 = body.split('\n')
+        new_body = ''.join(['<br>' + line for line in body2])
+        body = new_body
         radio = request.form['pic_action']
         if radio == 'keep' or radio == 'append':
             post_pics = Post(post_id).find()['post_pics']
@@ -438,8 +442,12 @@ def edit_comment(comment_id):
 
 @app.route('/save_edited_comment/<comment_id>', methods=['GET', 'POST'])
 def save_comment(comment_id):
-    new_body = request.form['edit_comment']
-    Comment(comment_id).save_edited_comment(new_body)
+    #new_body = request.form['edit_comment']
+    body = request.form.get("body")
+    body2 = body.split('\n')
+    new_body = ''.join(['<br>' + line for line in body2])
+    body = new_body
+    Comment(comment_id).save_edited_comment(body)
     post_id = Comment(comment_id).get_post_id()
     return open_post(post_id)
 
