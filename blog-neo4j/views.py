@@ -94,7 +94,12 @@ def logout():
 def new_post():
     header = request.form['header']
     hashtags = request.form['hashtags']
-    body = request.form['body']
+    #body = request.form['body']
+    body = request.form.get("body")
+    body2 = body.split('\n')
+    new_body = ''.join(['<br>' + line for line in body2])
+    body = new_body
+
     post_pics = []
     
     if request.files:    
@@ -181,7 +186,11 @@ def new_comment(post_id):
     if request.method == 'POST':
         pid = post_id
         commentator = session['username']
-        text = request.form['comment']
+        #text = request.form['comment']
+        text = request.form.get("comment")
+        text2 = text.split('\n')
+        new_text = ''.join(['<br>' + line for line in text2])
+        text = new_text
         if not text:
             flash('This blog prohibits silent comments')
     
