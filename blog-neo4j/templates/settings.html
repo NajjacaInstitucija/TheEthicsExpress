@@ -10,7 +10,6 @@
     .tab {
       display: grid;
       align-items: stretch;
-      background-color: white;
       color: gray;
       font-family: Verdana, Geneva, Tahoma, sans-serif;
       font-size: 180%;
@@ -33,19 +32,20 @@
 {% if session['username'] %}
 
 <div id="main">
-  <section class="wrapper">
+  <section class="wrapper style1">
     <div class="inner">
-     
-        
+      <div class="flex flex-2">
+        <div class="col align-center">
             <a class="tab" href="/change_password">Change password</a>
             <a class="tab" href="/change_profile_picture">Change profile picture</a>
-        
+        </div>
          
       
-      <div class="col col1 first">
-          <div class="image right" >
+      <div class="col align-center">
+          <div class="image round fit" >
             <a><img src="{{ url_for('static', filename='images/settings.jpg') }}" alt="" /></a>
           </div>
+        </div>
         </div>
     </div> 
   </section>
