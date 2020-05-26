@@ -64,7 +64,7 @@ def register():
         
         elif not User(username).register(password):
             flash('Username already exists')
-    
+        
     return render_template('register.html')
 
 
@@ -79,7 +79,7 @@ def login():
 
         else:
             session['username'] = username
-            flash('Registration successful')
+            flash('Login successful')
             return redirect(url_for('index'))
     
     return render_template('login.html') 
