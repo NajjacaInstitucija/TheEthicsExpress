@@ -339,9 +339,14 @@ def edit_post(post_id):
         header = request.form['header']
         hashtags = request.form['hashtags']
         body = request.form['body']
-        post_pics = []
-        
-        if request.files:    
+        radio = request.form['pic_action']
+        if radio == 'keep' or radio == 'append':
+            post_pics = Post(post_id).find()['post_pics']
+
+        elif radio == 'replace':
+            post_pics = []
+
+        if request.files and radio != 'keep':    
             for pic in request.files.getlist("pics"):
                 if pic.filename == "":
                     continue
@@ -376,10 +381,13 @@ def edit_post(post_id):
             flash('Posting nothing. How fun')
     
         else:
+
+            if len(post_pics) > 3:
+                post_pics = post_pics[-3:]
+
             Post(post_id).save_edited_post(header, body, post_pics)
             post = Post(post_id)
             old_hashtags = p.get_hashtags()
-            print(old_hashtags)
             post.update_hashtags(old_hashtags, hashtags)
             return open_post(post_id)
 
