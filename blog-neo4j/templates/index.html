@@ -31,14 +31,15 @@
                 </a>
             <br> Hashtags:
             #{{ ", #".join(post.hashtags) }}
+               
+            <br> Post: <ul>
+            <em>{{ post.post_details.body }}</em>
+            </ul> <ul>
             {% if post.post_details.post_pics %}
             {% for pic in post.post_details.post_pics %}
                 <img src="{{ pic }}" alt="Slika posta" width="300" height="200">
             {% endfor %}
-            {% endif %}   
-            <br> Post: <ul>
-            <em>{{ post.post_details.body }}</em>
-            </ul> 
+            {% endif %}</ul>
         </div>
             <ul class="comments">
                 {% for comment in post.comments %}

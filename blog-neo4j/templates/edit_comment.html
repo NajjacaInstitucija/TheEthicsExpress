@@ -5,12 +5,15 @@
 {% endblock %}
 
 
-
 {% block body %}
 <div class="subpage">
-<ul>
+<section class="wrapper style1">
+<div class="inner">
+    <h3>Edit comment</h3>
+    <ul>
     
-    <li class="post">
+    <ol class="post">
+    <div class="box"> 
         <b>{{ post.header }}</b>
         , posted on {{ post.date }} 
         <br> Author: 
@@ -19,15 +22,16 @@
         </a></b> 
         <br> Hashtags:
         #{{ ", #".join(hashtags) }}
+        <br> Post: <ul>
+
+        <em> {{ post.body }} </em>
         <br> <br>
         {% if post.post_pics %}
         {% for pic in post.post_pics %}
             <img src="{{ pic }}" alt="Slika posta" width="300" height="200">
         {% endfor %}
-        {% endif %} 
-        <br><br>
-        <em> {{ post.body }} </em>
-        <br>
+        {% endif %}
+    </div>
 
         <ul class="comments">
             {% for comment in comments %}
@@ -54,5 +58,7 @@
     </li>
     
 </ul>
+</div>
+</section>
 </div>
 {% endblock %}

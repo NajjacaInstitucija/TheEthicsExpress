@@ -40,9 +40,9 @@
 
                 Hashtags:
                 #{{ ", #".join(post.hashtags) }}
-                <br>
+                <br> Post: <ul>
                 <em>{{ post.post_details.body }}</em>
-                <br>
+                </ul> <ul>
 
                 {% if post.post_details.post_pics %}
                 {% for pic in post.post_details.post_pics %}

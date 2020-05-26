@@ -15,8 +15,9 @@
     <div class="inner">
       <h3>Viewing post</h3><hr>
         <div class="box"> 
-            <b>{{ post.header }}</b>, posted on {{ post.date }}
             <ul>
+            <b>{{ post.header }}</b>, posted on {{ post.date }}
+            
                   
                   Author: 
                       <a href="/profile/{{ user.username }}">
@@ -25,7 +26,7 @@
                   <br> 
                   Hashtags:
                     #{{ ", #".join(hashtags) }}
-                  <br>
+                    <br> Post: <ul>
                   <ul><em>{{ post.body }}</em>
                   <br>
                     {% if post.post_pics %}
