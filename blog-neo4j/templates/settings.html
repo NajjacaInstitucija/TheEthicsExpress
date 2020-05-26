@@ -2,7 +2,7 @@
 
 {% block head %}
 
-<title>Settings </title>
+<title>Postavke </title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -21,6 +21,8 @@
     text-decoration: underline;
     }
   </style>
+  
+  
 
 {% endblock %}
 
@@ -31,22 +33,21 @@
 {% if session['username'] %}
 
 <div id="main">
-  <section class="wrapper style1">
+  <section class="wrapper">
     <div class="inner">
-      <h2>Change settings<hr></h2>
-
+     
+        
             <a class="tab" href="/change_password">Change password</a>
             <a class="tab" href="/change_profile_picture">Change profile picture</a>
-
-            <div class="col col1 first">
-                {% if image %}
-                <div class="image right" >
-                    <img src="{{ image }}" alt="{{ username }}'s profile picture">
-                    
-                </div>
-                {% endif %}
+        
+         
+      
+      <div class="col col1 first">
+          <div class="image right" >
+            <a><img src="{{ url_for('static', filename='images/settings.jpg') }}" alt="" /></a>
           </div>
-    </div>
+        </div>
+    </div> 
   </section>
 </div>
 
