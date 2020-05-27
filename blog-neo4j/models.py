@@ -286,7 +286,7 @@ class Post:
         where p.id = $pid
         with p, h
         match (oh:Hashtag)-[:HASHTAGGING]->(op:Post)    
-        where op.header <> p.header 
+        where op.id <> p.id 
         with collect(distinct h.tag) as only_this, collect(distinct oh.tag) as other_also
         with [x in only_this where not x in other_also] as to_delete
         unwind to_delete as td
