@@ -103,7 +103,9 @@ def new_post():
     body = request.form.get("body")
     body2 = body.split('\n')
     new_body = ''.join(['<br>' + line for line in body2])
-    body = new_body
+    text = new_body
+    prefix = '<br>'
+    body = text[len(prefix):] if text.startswith(prefix) else text
 
     post_pics = []
 
@@ -192,10 +194,12 @@ def new_comment(post_id):
         pid = post_id
         commentator = session['username']
         #text = request.form['comment']
-        text = request.form.get("comment")
-        text2 = text.split('\n')
-        new_text = ''.join(['<br>' + line for line in text2])
-        text = new_text
+        body = request.form.get('comment')
+        body2 = body.split('\n')
+        new_body = ''.join(['<br>' + line for line in body2])
+        text = new_body
+        prefix = '<br>'
+        body = text[len(prefix):] if text.startswith(prefix) else text
         if not text:
             flash('This blog prohibits silent comments')
 
@@ -356,13 +360,15 @@ def edit_post(post_id):
         body = request.form.get("body")
         body2 = body.split('\n')
         new_body = ''.join(['<br>' + line for line in body2])
-        body = new_body
+        text = new_body
+        prefix = '<br>'
+        body = text[len(prefix):] if text.startswith(prefix) else text
         radio = request.form['pic_action']
+        post_pics = []
+        
         if radio == 'keep' or radio == 'append':
             post_pics = Post(post_id).find()['post_pics']
 
-        elif radio == 'replace':
-            post_pics = []
 
         if request.files and radio != 'keep':
             for pic in request.files.getlist("pics"):
@@ -451,11 +457,13 @@ def save_comment(comment_id):
     body = request.form.get('edit_comment')
     body2 = body.split('\n')
     new_body = ''.join(['<br>' + line for line in body2])
-    body = new_body
+    text = new_body
+    prefix = '<br>'
+    body = text[len(prefix):] if text.startswith(prefix) else text
     Comment(comment_id).save_edited_comment(body)
     post_id = Comment(comment_id).get_post_id()
     return open_post(post_id)
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(24)
-    app.run(debug=True)
+    app.run(debug=False)
