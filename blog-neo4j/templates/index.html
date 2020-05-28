@@ -16,12 +16,28 @@
 <div id="main">
 <section class="wrapper style1">
 <div class="inner">
+    <h2>New post:</h2>
+    <hr>
+    <div class="new_post">
+        <form action="/new_post" enctype="multipart/form-data" method="POST">
+            <span class="post_header">Header: </span>
+            <input type="text" placeholder="Place head here" name="header" size="40"><br> <br>
+            <span class="hashtags">Hashtags: </span>
+            <input type="text" placeholder="Separate hashtags with commablank(, )" name="hashtags" size="40"> <br> <br>
+            <br><textarea placeholder="What's up?" name="body" id="" value="{{ body }}" cols="40" rows="10"></textarea> <br> <br>
+            <span class="images">Images: 
+                <input type="file" name="pics" id="pics" multiple>
+            </span> <br> <br>
+            <input type="submit" value="Post">
+        </form>
+    </div>
+
     <h2>Recent posts<hr></h2>
     
     <div class="recent_posts">
     <ul>
     {% for post in recent_posts %}
-        <ol class="simple_post">
+        <div class="simple_post">
             <div class="box">
             <b><a href="/post/{{ post.post_details.id }}">{{ post.post_details.header }}</a></b>, posted on {{ post.post_details.date }}
             <br>
@@ -31,7 +47,7 @@
                 </a>
             <br> Hashtags:
             #{{ ", #".join(post.hashtags) }}  
-            <br> Post: 
+            <br> Post: <br>
             <em>{{ post.post_details.body | safe }}</em>
             <br>
             {% if post.post_details.post_pics %}
@@ -57,32 +73,18 @@
 
             </ul>
             <h4>Add new comment</h4>
-            <div class="new_comment">
+            <ul class="new_comment">
                 <form action="/add_comment/{{ post.post_details.id }}" method="POST">
                     <textarea placeholder="Comment this post..." name="comment" id="comment" rows="2"></textarea>
                     <input type="submit" value="Add comment">
                 </form>
             </div>
         </li>
-         <hr>
+        <hr>
     {% endfor %}
     </ul>
 
-    <h2>New post:</h2>
-    <hr>
-    <div class="new_post">
-        <form action="/new_post" enctype="multipart/form-data" method="POST">
-            <span class="post_header">Header: </span>
-            <input type="text" placeholder="Place head here" name="header" size="40"><br> <br>
-            <span class="hashtags">Hashtags: </span>
-            <input type="text" placeholder="Separate hashtags with commablank(, )" name="hashtags" size="40"> <br> <br>
-            <br><textarea placeholder="What's up?" name="body" id="" value="{{ body }}" cols="40" rows="10"></textarea> <br> <br>
-            <span class="images">Images: 
-                <input type="file" name="pics" id="pics" multiple>
-            </span> <br> <br>
-            <input type="submit" value="Post">
-        </form>
-    </div>
+    
 </div>
 </div>
 </section>
